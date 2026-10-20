@@ -7,9 +7,11 @@ import { DialogueEngine, type Phase } from './engine/DialogueEngine';
 import { loadSettings, saveSettings, storage } from './engine/ProgressStorage';
 import { BrowserSpeechProvider } from './engine/SpeechProvider';
 import type { Choice, Mood, Place, Session, Settings } from './engine/types';
-import { characterSvg, placeSvg, svgUrl } from './game/art';
+import { WorldMap, EpisodeRoom } from './components/WorldMap';
+import { SoundEffects } from './engine/SoundEffects';
 const engine = new ScenarioEngine();
 const speech = new BrowserSpeechProvider();
+const effects = new SoundEffects();
 export default function App() {
   const [page, setPage] = useState<'home' | 'places' | 'episodes' | 'game'>('home');
   const [place, setPlace] = useState<Place>('home');
@@ -98,6 +100,7 @@ export default function App() {
     lock.current = true;
     setBusy(true);
     speech.stop();
+    if (settings.voice) effects.play('tap');
     try {
       const episode = episodes.find((e) => e.id === id)!;
       let history = memoryHistory.current[id] ?? [];
@@ -131,6 +134,7 @@ export default function App() {
   };
   const touch = (target: string) => {
     if (!session || parent || phase === 'complete') return;
+    if (settings.voice) effects.play('tap');
     if (!touched) {
       setTouched(true);
       say(text);
@@ -141,14 +145,14 @@ export default function App() {
       say(session.variation.clue);
     } else say(text);
   };
-  const select = (choice: Choice) => {
-    if (lock.current || !session || dialogue.current?.phase !== 'choose') return;
-    lock.current = true;
+  const select = (choice: Choice, input: 'tap' | 'drag' = 'tap') => {
+    if (lock.current || !session || dialogue.current?.phase !== 'choose') return false;
     const result = dialogue.current.select(choice);
     setText(result.text);
     setMood(result.mood);
     setPhase('response');
     say(result.text);
+    if (settings.voice) effects.play(choice.complete ? 'happy' : 'drop');
     void storage
       .add({
         id: createId(),
@@ -158,6 +162,7 @@ export default function App() {
         variationId: session.variation.id,
         actionId: choice.id,
         intent: choice.intent,
+        input,
         order: choices.map((c) => c.id),
         responseMs: Math.max(0, Math.round(performance.now() - shownAt.current)),
         hintUsed,
@@ -165,12 +170,10 @@ export default function App() {
         repeatCount: session.repeatCount,
         completed: choice.complete,
       })
-      .catch(() => setStorageError('이번 선택을 저장하지 못했어요. 놀이는 계속할 수 있어요.'))
-      .finally(() => {
-        lock.current = false;
-      });
+      .catch(() => setStorageError('이번 선택을 저장하지 못했어요. 놀이는 계속할 수 있어요.'));
+    return true;
   };
-  const next = () => {
+  const next = useCallback(() => {
     const p = dialogue.current?.next();
     if (!p) return;
     setPhase(p);
@@ -180,10 +183,10 @@ export default function App() {
       speech.stop();
       setMood('happy');
     } else {
-      setText('친구의 말을 들었어요. 이제 어떻게 해 볼까요?');
+      setText(session?.variation.clue ?? '천천히 살펴봐요.');
       setChoices([]);
     }
-  };
+  }, [session]);
   const leave = (target: typeof page) => {
     speechToken.current++;
     speech.stop();
@@ -192,187 +195,67 @@ export default function App() {
     dialogue.current = undefined;
     lock.current = false;
   };
+  const choosePlace = (selected: Place) => {
+    setPlace(selected);
+    setPage('episodes');
+    say(selected === 'home' ? '지니야, 나 왔어!' : '하우리야, 같이 놀자!');
+    if (settings.voice) effects.play('tap');
+  };
   return (
-    <div className="app-shell">
-      <header className="app-header" inert={parent}>
-        <button className="brand" onClick={() => leave('home')} aria-label="처음으로">
-          <span className="brand-mark">☀</span>
-          <span>
-            지율이의 하루<small>함께 자라는 작은 모험</small>
-          </span>
-        </button>
-        <button className="parent-link" onClick={() => setParent(true)}>
-          <span aria-hidden="true">⚙</span>
-          <span>부모님</span>
-        </button>
-      </header>
-      <main inert={parent}>
-        {page === 'home' && (
-          <>
-            <section className="hero">
-              <div className="hero-copy">
-                <div className="eyebrow">
-                  <span /> 오늘도, 즐거운 하루!
-                </div>
-                <h1>
-                  작은 마음들이 만나
-                  <br />
-                  <em>신나는 하루</em>가 돼요
-                </h1>
-                <p>
-                  지율이와 지니, 하우리의 이야기 속으로.
-                  <br />
-                  천천히 살펴보고, 함께 이야기해요.
-                </p>
-                <button
-                  className="primary start-button"
-                  onClick={() => {
-                    setPage('places');
-                    say('오늘은 어디에서 놀까요?');
-                  }}
-                >
-                  함께 놀러 가기 <span>↗</span>
-                </button>
-                <div className="hero-note">
-                  <span>♡</span> 정답을 서두르지 않는, 우리만의 놀이
-                </div>
-              </div>
-              <div
-                className="hero-art"
-                aria-label="지율이, 강아지 지니, 친구 하우리가 함께 웃는 그림"
-                role="img"
-              >
-                <span className="sun-doodle">☀</span>
-                <span className="cloud cloud-one" />
-                <span className="cloud cloud-two" />
-                <span className="hero-speech">우리 같이 놀까?</span>
-                <div className="art-hill" />
-                <img className="hero-boy" src={svgUrl(characterSvg('jiyul', 'happy'))} alt="" />
-                <img className="hero-dog" src={svgUrl(characterSvg('jini', 'happy'))} alt="" />
-                <img className="hero-friend" src={svgUrl(characterSvg('hauri', 'happy'))} alt="" />
-                <span className="flower flower-one">✿</span>
-                <span className="flower flower-two">✿</span>
-                <span className="art-tag">지율이와 친구들</span>
-              </div>
-            </section>
-            <section className="world-section">
-              <div className="section-heading">
-                <div>
-                  <div className="eyebrow">우리의 작은 세상</div>
-                  <h2>어디에서 놀아 볼까요?</h2>
-                </div>
-                <span className="tiny-label">두 곳의 따뜻한 이야기</span>
-              </div>
-              <div className="place-grid">
-                {(['home', 'school'] as const).map((p, i) => (
-                  <button
-                    key={p}
-                    className="place-card"
-                    onClick={() => {
-                      setPlace(p);
-                      setPage('episodes');
-                      say(
-                        p === 'home'
-                          ? '지니가 기다리는 우리 집이에요.'
-                          : '하우리와 함께 유치원에서 놀아요.',
-                      );
-                    }}
-                  >
-                    <img src={svgUrl(placeSvg(p === 'school'))} alt="" />
-                    <div className="place-card-info">
-                      <div>
-                        <span className="place-label">
-                          {i ? '친구와 사이좋게' : '지니와 오순도순'}
-                        </span>
-                        <h3>{i ? '유치원' : '우리 집'}</h3>
-                        <p>{i ? '블록을 쌓고, 마음을 나눠요.' : '작은 신호에 귀 기울여요.'}</p>
-                      </div>
-                      <span className="round-arrow">↗</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </section>
-            <section className="together-note">
-              <span className="note-icon">🌱</span>
-              <div>
-                <h3>아이의 속도로, 함께해 주세요</h3>
-                <p>잠깐 기다리는 시간도 놀이예요. 말하지 않아도 괜찮아요.</p>
-              </div>
-              <span className="note-heart">♡</span>
-            </section>
-          </>
+    <div className="game-app">
+      <nav className="game-toolbar" aria-label="게임 메뉴" inert={parent}>
+        {page === 'home' || page === 'places' ? (
+          <button
+            className="round-control"
+            aria-label={settings.voice ? '음성 끄기' : '음성 켜기'}
+            onClick={() => changeSettings({ ...settings, voice: !settings.voice })}
+          >
+            {settings.voice ? '♫' : '♩'}
+          </button>
+        ) : (
+          <button
+            className="round-control"
+            aria-label={page === 'game' ? '이야기 고르기로 돌아가기' : '처음으로'}
+            onClick={() => leave(page === 'game' ? 'episodes' : 'home')}
+          >
+            ←
+          </button>
         )}
-        {page === 'places' && (
-          <section className="selection-page">
-            <div className="eyebrow">오늘의 작은 모험</div>
-            <h1>어디에서 놀까요?</h1>
-            <p>마음에 드는 곳을 톡 눌러요.</p>
-            <div className="place-grid">
-              {(['home', 'school'] as const).map((p) => (
-                <button
-                  key={p}
-                  className="place-card"
-                  onClick={() => {
-                    setPlace(p);
-                    setPage('episodes');
-                    say(p === 'home' ? '지니를 만나러 가요.' : '하우리를 만나러 가요.');
-                  }}
-                >
-                  <img src={svgUrl(placeSvg(p === 'school'))} alt="" />
-                  <div className="place-card-info">
-                    <h2>{p === 'home' ? '우리 집' : '유치원'}</h2>
-                    <span className="round-arrow">↗</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-            <p className="future-note">🌳 놀이터와 게임방 이야기는 다음에 만나요.</p>
-          </section>
+        {page !== 'home' && page !== 'places' && (
+          <span className="location-tag">{place === 'home' ? '우리 집' : '유치원'}</span>
         )}
-        {page === 'episodes' && (
-          <section className="selection-page">
-            <button className="text-button" onClick={() => setPage('places')}>
-              ← 장소 고르기
+        <div className="toolbar-right">
+          {page === 'game' && (
+            <button
+              className="round-control"
+              aria-label={settings.voice ? '음성 끄기' : '음성 켜기'}
+              onClick={() => changeSettings({ ...settings, voice: !settings.voice })}
+            >
+              {settings.voice ? '♫' : '♩'}
             </button>
-            <div className="eyebrow">
-              {place === 'home' ? '지니와 함께하는' : '하우리와 함께하는'} 시간
-            </div>
-            <h1>{place === 'home' ? '우리 집' : '유치원'}에 왔어요!</h1>
-            <p>어떤 이야기를 만나 볼까요?</p>
-            <div className="episode-grid">
-              {episodes
-                .filter((e) => e.place === place)
-                .map((e, i) => (
-                  <button
-                    disabled={busy}
-                    className="episode-card"
-                    key={e.id}
-                    onClick={() => void start(e.id)}
-                  >
-                    <div className={`episode-illustration episode-${i}`}>
-                      <img
-                        src={svgUrl(characterSvg(e.character, i === 0 ? 'happy' : 'thinking'))}
-                        alt=""
-                      />
-                      <span>{e.icon}</span>
-                    </div>
-                    <div className="episode-content">
-                      <small>이야기 {String(i + 1).padStart(2, '0')}</small>
-                      <h2>{e.title}</h2>
-                      <p>{e.subtitle}</p>
-                      <span className="episode-play">
-                        이야기 시작 <span>▶</span>
-                      </span>
-                    </div>
-                  </button>
-                ))}
-            </div>
-            {busy && <p role="status">친구를 만나러 가는 중이에요…</p>}
-          </section>
+          )}
+          <button
+            className="round-control parent-entry"
+            aria-label="부모님"
+            onClick={() => setParent(true)}
+          >
+            ⚙
+          </button>
+        </div>
+      </nav>
+      <main className="game-main" inert={parent}>
+        {(page === 'home' || page === 'places') && <WorldMap onPlace={choosePlace} />}
+        {page === 'episodes' && (
+          <EpisodeRoom
+            place={place}
+            episodes={episodes}
+            busy={busy}
+            onStart={(id) => void start(id)}
+          />
         )}
         {page === 'game' && session && (
           <GameUI
+            key={session.id}
             session={session}
             phase={phase}
             mood={mood}
@@ -382,9 +265,9 @@ export default function App() {
             voiceFailed={voiceFailed}
             spoken={spoken}
             choices={choices}
+            paused={parent}
             touch={touch}
             leave={leave}
-            changeSettings={changeSettings}
             say={say}
             reveal={reveal}
             select={select}
@@ -395,14 +278,10 @@ export default function App() {
               say(session.variation.hint);
             }}
             onSpoken={() => setSpoken(true)}
+            onAgain={() => void start(session.episode.id)}
           />
         )}
       </main>
-      <footer inert={parent}>
-        <span className="footer-brand">☀ 지율이의 신나는 하루</span>
-        <span>작은 발견, 따뜻한 마음, 함께하는 놀이</span>
-        <small>부모와 함께하는 놀이 보조 게임 · 광고와 개인정보 수집이 없어요</small>
-      </footer>
       {storageError && (
         <div className="storage-notice" role="status">
           {storageError}

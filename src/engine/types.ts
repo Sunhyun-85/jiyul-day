@@ -3,6 +3,7 @@ export type Mood = 'neutral' | 'happy' | 'sad' | 'thinking' | 'surprised';
 export interface Action {
   id: string;
   intent: string;
+  shortResult?: string;
   icon: string;
   lines: string[];
   result: string[];
@@ -14,6 +15,8 @@ export interface Variation {
   state: string;
   object: string;
   clue: string;
+  shortLine?: string;
+  cueIcon?: string;
   lines: string[];
   hint: string;
   mood: Mood;
@@ -35,6 +38,7 @@ export interface Settings {
   hints: boolean;
   voice: boolean;
   parentMode: boolean;
+  captions: boolean;
 }
 export interface PlayRecord {
   id: string;
@@ -45,6 +49,7 @@ export interface PlayRecord {
   actionId: string;
   intent: string;
   order: string[];
+  input?: 'tap' | 'drag';
   responseMs: number;
   hintUsed: boolean;
   spoken: boolean;

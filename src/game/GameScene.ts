@@ -1,17 +1,26 @@
 import Phaser from 'phaser';
-import { characterSvg, roomSvg, svgUrl } from './art';
-import type { Mood, Session } from '../engine/types';
+import { characterSvg, svgUrl } from './art';
+import { playRoomSvg } from './playArt';
+import type { Session } from '../engine/types';
+import type { SceneState } from './playState';
 export class GameScene extends Phaser.Scene {
   private actors: Phaser.GameObjects.Image[] = [];
-  private ready = false;
+  private background?: Phaser.GameObjects.Image;
+  private state: SceneState;
+  private lastReaction = -1;
+  private lastTouch = 0;
+  private reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   constructor(
     private session: Session,
     private onTouch: (target: string) => void,
+    initial: SceneState,
+    private onReady: () => void,
   ) {
     super('day');
+    this.state = initial;
   }
   preload() {
-    this.load.svg('room', svgUrl(roomSvg(this.session.episode.place === 'school')));
+    this.load.svg('room', svgUrl(playRoomSvg(this.session.episode.place === 'school')));
     for (const name of ['jiyul', 'jini', 'hauri'] as const)
       for (const mood of ['neutral', 'happy', 'sad', 'thinking', 'surprised'] as const) {
         this.load.svg(`${name}-${mood}`, svgUrl(characterSvg(name, mood)));
@@ -19,116 +28,151 @@ export class GameScene extends Phaser.Scene {
       }
   }
   create() {
-    this.add.image(360, 250, 'room');
-    const { episode, variation } = this.session;
-    this.addProps();
-    const main = this.add.image(295, 302, 'jiyul-neutral').setDisplaySize(147, 184);
-    const friend = this.add
-      .image(466, 302, `${episode.character}-${variation.mood}`)
-      .setDisplaySize(158, 198);
-    this.actors = [main, friend];
-    for (const [index, actor] of this.actors.entries()) {
-      actor.setInteractive({ useHandCursor: true }).on('pointerdown', () => {
-        this.onTouch(index === 1 ? 'friend' : 'jiyul');
-        this.tweens.add({ targets: actor, y: actor.y - 9, duration: 160, yoyo: true });
-      });
-      if (!matchMedia('(prefers-reduced-motion: reduce)').matches)
-        this.tweens.add({
-          targets: actor,
-          angle: index ? 1.2 : -1.2,
-          duration: 1900,
-          yoyo: true,
-          repeat: -1,
-        });
-    }
-    this.time.addEvent({
-      delay: 3200,
-      loop: true,
-      callback: () => {
-        for (const actor of this.actors) {
-          const key = actor.texture.key.replace('-blink', '');
-          actor.setTexture(`${key}-blink`);
-          this.time.delayedCall(
-            140,
-            () => actor.active && actor.texture.key === `${key}-blink` && actor.setTexture(key),
-          );
-        }
-      },
-    });
-    this.ready = true;
-  }
-  setMood(mood: Mood) {
-    if (this.ready) {
-      this.actors[1].setTexture(`${this.session.episode.character}-${mood}`);
-      this.actors[0].setTexture(`jiyul-${mood === 'happy' ? 'happy' : 'thinking'}`);
-    }
-  }
-  private addProps() {
-    const { episode, variation: v } = this.session;
-    const g = this.add.graphics();
-    const hotspot = (x: number, y: number, w: number, h: number, id: string) =>
-      this.add
-        .zone(x, y, Math.max(w, 112), Math.max(h, 112))
+    this.background = this.add.image(0, 0, 'room').setOrigin(0);
+    this.actors = [
+      this.add.image(0, 0, 'jiyul-neutral'),
+      this.add.image(0, 0, `${this.session.episode.character}-${this.state.mood}`),
+    ];
+    this.actors.forEach((actor, index) => {
+      actor
+        .setOrigin(0.5, 0.9)
         .setInteractive({ useHandCursor: true })
-        .on('pointerdown', () => this.onTouch(id));
-    if (episode.id === 'jini-needs') {
-      g.fillStyle(0xc78163).fillEllipse(413, 414, 67, 27);
-      g.fillStyle(0xf4ead4).fillEllipse(413, 406, 62, 18);
-      g.fillStyle(0x7baeb8).fillEllipse(505, 414, 59, 24);
-      g.fillStyle(0xe4eeee).fillEllipse(505, 407, 54, 16);
-      hotspot(413, 410, 85, 80, 'bowl');
-      hotspot(505, 410, 85, 80, 'water');
-      if (v.state === 'walk') {
-        g.lineStyle(8, 0xb88c60).strokeCircle(564, 357, 15).lineBetween(576, 368, 601, 400);
-        hotspot(580, 375, 90, 90, 'leash');
+        .on('pointerdown', () => {
+          this.onTouch(index ? 'friend' : 'jiyul');
+          if (!this.reduced)
+            this.tweens.add({ targets: actor, angle: 3, duration: 130, yoyo: true, repeat: 1 });
+        });
+    });
+    this.layout();
+    this.scale.on('resize', this.layout, this);
+    this.time.addEvent({ delay: 3100, loop: true, callback: () => this.blink() });
+    this.time.addEvent({ delay: 2700, loop: true, callback: () => this.showNeed() });
+    this.apply(this.state);
+    this.onReady();
+  }
+  private layout() {
+    if (!this.background) return;
+    this.tweens.killTweensOf(this.actors);
+    const { width: w, height: h } = this.scale;
+    this.background.setDisplaySize(w, h);
+    this.actors.forEach((actor, i) => {
+      const height = Math.min(w * (i ? 0.49 : 0.4), h * 0.33);
+      actor
+        .setDisplaySize(height * 0.8, height)
+        .setPosition(w * (i ? 0.64 : 0.19), h * 0.66)
+        .setAngle(0);
+    });
+    if (this.state.reaction && (this.state.phase === 'response' || this.state.phase === 'complete'))
+      this.respond();
+  }
+  apply(state: SceneState) {
+    this.state = state;
+    if (!this.actors.length) return;
+    this.actors[1].setTexture(`${this.session.episode.character}-${state.mood}`);
+    this.actors[0].setTexture(`jiyul-${state.mood === 'happy' ? 'happy' : 'thinking'}`);
+    if (state.reaction && state.reaction.id !== this.lastReaction) {
+      this.lastReaction = state.reaction.id;
+      this.respond();
+    }
+    if (state.phase === 'observe') {
+      this.tweens.killTweensOf(this.actors);
+      this.layout();
+      this.showNeed();
+    }
+    if (state.touchCount !== this.lastTouch) {
+      this.lastTouch = state.touchCount;
+      if (!this.reduced && !state.paused && ['observe', 'choose'].includes(state.phase)) {
+        this.tweens.killTweensOf(this.actors[1]);
+        this.tweens.add({
+          targets: this.actors[1],
+          angle: -5,
+          y: this.scale.height * 0.64,
+          duration: 160,
+          yoyo: true,
+          repeat: 1,
+        });
       }
     }
-    if (episode.id === 'jini-ball') {
-      g.fillStyle(0xc3976a).fillRoundedRect(533, 351, 70, 59, 6);
-      g.lineStyle(3, 0xa77b53).lineBetween(568, 351, 568, 408);
-      const coords: Record<string, number[]> = {
-        sofa: [143, 347],
-        box: [607, 383],
-        room: [620, 308],
-      };
-      const [x, y] = coords[v.id];
-      g.fillStyle(0xdc785d).fillCircle(x, y, 14);
-      g.lineStyle(3, 0xffe4ad).strokeCircle(x, y, 9);
-      hotspot(143, 340, 150, 82, 'sofa');
-      hotspot(570, 380, 110, 92, 'box');
-      hotspot(620, 272, 100, 140, 'door');
-    }
-    if (episode.place === 'school') {
-      const blocks =
-        v.id === 'tower'
-          ? [
-              [376, 412],
-              [408, 424],
-              [350, 430],
-            ]
-          : v.id === 'shortage'
-            ? [[380, 418]]
-            : [
-                [355, 418],
-                [384, 418],
-                [370, 389],
-                [413, 430],
-              ];
-      blocks.forEach(([x, y], i) => {
-        g.fillStyle([0xdca16a, 0x8eaaa8, 0xe5bf63][i % 3]).fillRoundedRect(x, y, 26, 26, 3);
+  }
+  private blink() {
+    if (this.state.paused) return;
+    for (const actor of this.actors) {
+      const key = actor.texture.key.replace('-blink', '');
+      actor.setTexture(`${key}-blink`);
+      this.time.delayedCall(140, () => {
+        if (actor.active && actor.texture.key === `${key}-blink`) actor.setTexture(key);
       });
-      if (v.id === 'rest') {
-        g.fillStyle(0xb9b5cc).fillEllipse(480, 405, 116, 33);
+    }
+  }
+  private showNeed() {
+    if (this.reduced || this.state.paused || !['observe', 'choose'].includes(this.state.phase))
+      return;
+    const friend = this.actors[1];
+    if (!friend || this.tweens.isTweening(friend)) return;
+    const state = this.session.variation.state;
+    const { width: w, height: h } = this.scale;
+    if (this.session.episode.id === 'jini-needs') {
+      const x = state === 'hungry' ? w * 0.54 : state === 'thirsty' ? w * 0.68 : w * 0.77;
+      this.tweens.add({
+        targets: friend,
+        x,
+        y: h * (state === 'walk' ? 0.6 : 0.675),
+        angle: state === 'walk' ? 7 : -8,
+        duration: 650,
+        yoyo: true,
+        hold: 350,
+        ease: 'Sine.easeInOut',
+      });
+    } else
+      this.tweens.add({
+        targets: friend,
+        angle: state === 'rest' ? -3 : 3,
+        y: friend.y - 5,
+        duration: 700,
+        yoyo: true,
+        ease: 'Sine.easeInOut',
+      });
+  }
+  private respond() {
+    const reaction = this.state.reaction;
+    if (!reaction || !this.actors.length) return;
+    this.tweens.killTweensOf(this.actors);
+    const { width: w, height: h } = this.scale;
+    const friend = this.actors[1];
+    const main = this.actors[0];
+    const duration = this.reduced ? 0 : 600;
+    const action = reaction.actionId;
+    if (this.session.episode.id === 'jini-needs' && reaction.complete) {
+      if (action === 'walk') {
+        this.tweens.add({ targets: friend, x: w * 0.78, y: h * 0.59, angle: 0, duration });
+        this.tweens.add({ targets: main, x: w * 0.59, y: h * 0.62, angle: 0, duration });
+      } else {
+        this.tweens.add({
+          targets: friend,
+          x: w * (action === 'food' ? 0.54 : 0.7),
+          y: h * 0.7,
+          angle: -9,
+          duration,
+          onComplete: () => {
+            if (!this.reduced)
+              this.tweens.add({ targets: friend, angle: -3, duration: 260, yoyo: true, repeat: 5 });
+          },
+        });
       }
-      if (v.id === 'toy') {
-        g.fillStyle(0xba9873).fillRoundedRect(550, 365, 65, 44, 7);
-        g.lineStyle(3, 0xf1d9b4).strokeRect(556, 370, 53, 31);
-      }
-      if (v.id === 'lost') {
-        g.fillStyle(0xe9d5ad).fillRoundedRect(535, 382, 95, 50, 5);
-        g.lineStyle(3, 0xb6a080).strokeRect(545, 390, 74, 33);
-      }
-      hotspot(385, 418, 115, 85, 'blocks');
+    } else if (action === 'respect' && reaction.complete) {
+      this.tweens.add({ targets: main, x: w * 0.18, duration });
+      this.tweens.add({ targets: friend, y: h * 0.69, angle: -3, duration });
+    } else if (reaction.complete) {
+      this.tweens.add({
+        targets: [main, friend],
+        y: h * 0.63,
+        angle: 0,
+        duration: duration / 2,
+        yoyo: !this.reduced,
+        repeat: this.reduced ? 0 : 1,
+      });
+    } else if (!this.reduced) {
+      this.tweens.add({ targets: friend, angle: 5, duration: 300, yoyo: true, repeat: 1 });
     }
   }
 }

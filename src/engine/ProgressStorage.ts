@@ -6,6 +6,7 @@ export const defaults: Settings = {
   hints: true,
   voice: true,
   parentMode: false,
+  captions: false,
 };
 export function loadSettings(): Settings {
   try {
@@ -17,6 +18,7 @@ export function loadSettings(): Settings {
       hints: typeof s.hints === 'boolean' ? s.hints : true,
       voice: typeof s.voice === 'boolean' ? s.voice : true,
       parentMode: s.parentMode === true,
+      captions: s.captions === true,
     };
   } catch {
     return { ...defaults };

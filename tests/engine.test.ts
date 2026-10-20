@@ -205,3 +205,30 @@ it('음성 중지 API가 예외를 내도 놀이 호출을 중단하지 않아�
   expect(() => provider.stop()).not.toThrow();
   expect(await provider.speak('같이 놀자', 1)).toBe(false);
 });
+
+it('끌어놓기 목적지는 물건 의미로 연결하고 표시 순서와 무관해요', async () => {
+  const { itemTarget, dropInside } = await import('../src/game/playState');
+  expect(itemTarget('jini-needs', 'food')).toBe('bowl');
+  expect(itemTarget('jini-needs', 'water')).toBe('waterBowl');
+  expect(itemTarget('jini-needs', 'walk')).toBe('door');
+  expect(itemTarget('jini-needs', 'ask')).toBeNull();
+  expect(itemTarget('hauri-blocks', 'share_idea')).toBe('building');
+  expect(dropInside({ x: 120, y: 115 }, { left: 100, top: 100, right: 150, bottom: 150 })).toBe(
+    true,
+  );
+  expect(dropInside({ x: 300, y: 115 }, { left: 100, top: 100, right: 150, bottom: 150 })).toBe(
+    false,
+  );
+});
+
+it('모든 상황과 반응에 짧은 게임 말풍선이 있어요', () => {
+  for (const episode of episodes)
+    for (const variation of episode.variations) {
+      expect(variation.shortLine?.length).toBeGreaterThan(0);
+      expect(variation.shortLine!.length).toBeLessThanOrEqual(20);
+      for (const action of variation.actions) {
+        expect(action.shortResult?.length).toBeGreaterThan(0);
+        expect(action.shortResult!.length).toBeLessThanOrEqual(20);
+      }
+    }
+});

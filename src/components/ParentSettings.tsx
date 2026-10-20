@@ -118,9 +118,9 @@ export function ParentSettings({
                 <option value="8">8초</option>
               </select>
             </div>
-            {(['hints', 'voice', 'parentMode'] as const).map((key, i) => (
+            {(['hints', 'voice', 'parentMode', 'captions'] as const).map((key, i) => (
               <label className="setting-row" key={key}>
-                {['힌트 사용', '음성 사용', '부모 발화 확인 버튼'][i]}
+                {['힌트 사용', '음성 사용', '부모 발화 확인 버튼', '전체 대사 자막'][i]}
                 <input
                   type="checkbox"
                   checked={settings[key]}
