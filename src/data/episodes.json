@@ -1,0 +1,1011 @@
+[
+  {
+    "id": "jini-needs",
+    "title": "지니가 배고파요",
+    "subtitle": "지니의 마음을 알아볼까요?",
+    "icon": "🥣",
+    "place": "home",
+    "character": "jini",
+    "variations": [
+      {
+        "id": "hungry",
+        "state": "hungry",
+        "object": "bowl",
+        "clue": "지니가 빈 밥그릇을 코로 톡톡 건드려요.",
+        "lines": [
+          "꼬르륵… 지니가 빈 밥그릇을 바라봐요."
+        ],
+        "hint": "지니가 빈 밥그릇을 코로 톡톡 건드려요.",
+        "mood": "thinking",
+        "actions": [
+          {
+            "id": "ask",
+            "intent": "ask_need",
+            "icon": "💬",
+            "lines": [
+              "무엇이 필요해?",
+              "왜 그러고 있어?"
+            ],
+            "result": [
+              "지니가 빈 밥그릇을 코로 톡톡 건드려요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "food",
+            "intent": "care_food",
+            "icon": "🥣",
+            "lines": [
+              "밥을 줄까?",
+              "밥그릇을 채워 줄게."
+            ],
+            "result": [
+              "냠냠! 지니가 맛있게 밥을 먹어요. 배가 고팠구나!"
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "water",
+            "intent": "care_water",
+            "icon": "💧",
+            "lines": [
+              "물을 줄까?",
+              "깨끗한 물을 줄게."
+            ],
+            "result": [
+              "지니가 다시 신호를 보내요. 지니가 빈 밥그릇을 코로 톡톡 건드려요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "walk",
+            "intent": "care_walk",
+            "icon": "🐾",
+            "lines": [
+              "어른과 산책 갈까?",
+              "어른께 산책을 부탁하자."
+            ],
+            "result": [
+              "지니가 다시 신호를 보내요. 지니가 빈 밥그릇을 코로 톡톡 건드려요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          }
+        ]
+      },
+      {
+        "id": "thirsty",
+        "state": "thirsty",
+        "object": "water",
+        "clue": "지니가 물그릇을 핥아요. 물이 없네요.",
+        "lines": [
+          "헥헥! 지니가 빈 물그릇 앞에 앉았어요."
+        ],
+        "hint": "지니가 물그릇을 핥아요. 물이 없네요.",
+        "mood": "thinking",
+        "actions": [
+          {
+            "id": "ask",
+            "intent": "ask_need",
+            "icon": "💬",
+            "lines": [
+              "무엇이 필요해?",
+              "왜 그러고 있어?"
+            ],
+            "result": [
+              "지니가 물그릇을 핥아요. 물이 없네요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "food",
+            "intent": "care_food",
+            "icon": "🥣",
+            "lines": [
+              "밥을 줄까?",
+              "밥그릇을 채워 줄게."
+            ],
+            "result": [
+              "지니가 다시 신호를 보내요. 지니가 물그릇을 핥아요. 물이 없네요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "water",
+            "intent": "care_water",
+            "icon": "💧",
+            "lines": [
+              "물을 줄까?",
+              "깨끗한 물을 줄게."
+            ],
+            "result": [
+              "찹찹! 지니가 물을 마셔요. 목이 말랐구나!"
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "walk",
+            "intent": "care_walk",
+            "icon": "🐾",
+            "lines": [
+              "어른과 산책 갈까?",
+              "어른께 산책을 부탁하자."
+            ],
+            "result": [
+              "지니가 다시 신호를 보내요. 지니가 물그릇을 핥아요. 물이 없네요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          }
+        ]
+      },
+      {
+        "id": "walk",
+        "state": "walk",
+        "object": "leash",
+        "clue": "지니가 목줄을 물고 문 앞에서 꼬리를 흔들어요.",
+        "lines": [
+          "지니가 목줄을 가져왔어요. 어디 가고 싶을까요?"
+        ],
+        "hint": "지니가 목줄을 물고 문 앞에서 꼬리를 흔들어요.",
+        "mood": "thinking",
+        "actions": [
+          {
+            "id": "ask",
+            "intent": "ask_need",
+            "icon": "💬",
+            "lines": [
+              "무엇이 필요해?",
+              "왜 그러고 있어?"
+            ],
+            "result": [
+              "지니가 목줄을 물고 문 앞에서 꼬리를 흔들어요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "food",
+            "intent": "care_food",
+            "icon": "🥣",
+            "lines": [
+              "밥을 줄까?",
+              "밥그릇을 채워 줄게."
+            ],
+            "result": [
+              "지니가 다시 신호를 보내요. 지니가 목줄을 물고 문 앞에서 꼬리를 흔들어요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "water",
+            "intent": "care_water",
+            "icon": "💧",
+            "lines": [
+              "물을 줄까?",
+              "깨끗한 물을 줄게."
+            ],
+            "result": [
+              "지니가 다시 신호를 보내요. 지니가 목줄을 물고 문 앞에서 꼬리를 흔들어요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "walk",
+            "intent": "care_walk",
+            "icon": "🐾",
+            "lines": [
+              "어른과 산책 갈까?",
+              "어른께 산책을 부탁하자."
+            ],
+            "result": [
+              "어른과 함께 목줄을 하고 밖으로 나가요. 지니의 꼬리가 살랑살랑!"
+            ],
+            "complete": true,
+            "mood": "happy"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "jini-ball",
+    "title": "지니의 공이 없어졌어요",
+    "subtitle": "꼭꼭 숨은 공을 찾아요.",
+    "icon": "⚽",
+    "place": "home",
+    "character": "jini",
+    "variations": [
+      {
+        "id": "sofa",
+        "state": "searching",
+        "object": "sofa",
+        "clue": "소파 아래에서 빨간 공이 살짝 보여요.",
+        "lines": [
+          "킁킁… 지니가 공을 찾고 있어요.",
+          "지니가 두리번두리번. 공이 어디 갔을까요?"
+        ],
+        "hint": "소파 아래에서 빨간 공이 살짝 보여요.",
+        "mood": "thinking",
+        "actions": [
+          {
+            "id": "ask",
+            "intent": "ask_location",
+            "icon": "💬",
+            "lines": [
+              "공이 어디에 있을까?",
+              "어디에서 공을 가지고 놀았어?"
+            ],
+            "result": [
+              "소파 아래에서 빨간 공이 살짝 보여요. 지니는 혼자 꺼내기 어려운가 봐요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "sofa",
+            "intent": "offer_help",
+            "icon": "🛋️",
+            "lines": [
+              "소파 아래를 볼까?",
+              "소파 아래에서 찾아볼게."
+            ],
+            "result": [
+              "찾았다! 공을 건네자 지니가 폴짝 뛰어요. 함께 찾아서 즐거워요!"
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "box",
+            "intent": "offer_help",
+            "icon": "📦",
+            "lines": [
+              "상자 뒤를 볼까?",
+              "상자 뒤에서 찾아볼게."
+            ],
+            "result": [
+              "여기에는 공이 없네요. 소파 아래에서 빨간 공이 살짝 보여요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "room",
+            "intent": "offer_help",
+            "icon": "🚪",
+            "lines": [
+              "옆방을 볼까?",
+              "옆방에서 찾아볼게."
+            ],
+            "result": [
+              "여기에는 공이 없네요. 소파 아래에서 빨간 공이 살짝 보여요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          }
+        ]
+      },
+      {
+        "id": "box",
+        "state": "searching",
+        "object": "box",
+        "clue": "상자 뒤에서 빨간 공이 살짝 보여요.",
+        "lines": [
+          "킁킁… 지니가 공을 찾고 있어요.",
+          "지니가 두리번두리번. 공이 어디 갔을까요?"
+        ],
+        "hint": "상자 뒤에서 빨간 공이 살짝 보여요.",
+        "mood": "thinking",
+        "actions": [
+          {
+            "id": "ask",
+            "intent": "ask_location",
+            "icon": "💬",
+            "lines": [
+              "공이 어디에 있을까?",
+              "어디에서 공을 가지고 놀았어?"
+            ],
+            "result": [
+              "상자 뒤에서 빨간 공이 살짝 보여요. 지니는 혼자 꺼내기 어려운가 봐요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "sofa",
+            "intent": "offer_help",
+            "icon": "🛋️",
+            "lines": [
+              "소파 아래를 볼까?",
+              "소파 아래에서 찾아볼게."
+            ],
+            "result": [
+              "여기에는 공이 없네요. 상자 뒤에서 빨간 공이 살짝 보여요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "box",
+            "intent": "offer_help",
+            "icon": "📦",
+            "lines": [
+              "상자 뒤를 볼까?",
+              "상자 뒤에서 찾아볼게."
+            ],
+            "result": [
+              "찾았다! 공을 건네자 지니가 폴짝 뛰어요. 함께 찾아서 즐거워요!"
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "room",
+            "intent": "offer_help",
+            "icon": "🚪",
+            "lines": [
+              "옆방을 볼까?",
+              "옆방에서 찾아볼게."
+            ],
+            "result": [
+              "여기에는 공이 없네요. 상자 뒤에서 빨간 공이 살짝 보여요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          }
+        ]
+      },
+      {
+        "id": "room",
+        "state": "searching",
+        "object": "door",
+        "clue": "지니가 옆방 문을 바라봐요. 문 너머에 빨간 공이 보여요.",
+        "lines": [
+          "킁킁… 지니가 공을 찾고 있어요.",
+          "지니가 두리번두리번. 공이 어디 갔을까요?"
+        ],
+        "hint": "지니가 옆방 문을 바라봐요. 문 너머에 빨간 공이 보여요.",
+        "mood": "thinking",
+        "actions": [
+          {
+            "id": "ask",
+            "intent": "ask_location",
+            "icon": "💬",
+            "lines": [
+              "공이 어디에 있을까?",
+              "어디에서 공을 가지고 놀았어?"
+            ],
+            "result": [
+              "지니가 옆방 문을 바라봐요. 문 너머에 빨간 공이 보여요. 지니는 혼자 꺼내기 어려운가 봐요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "sofa",
+            "intent": "offer_help",
+            "icon": "🛋️",
+            "lines": [
+              "소파 아래를 볼까?",
+              "소파 아래에서 찾아볼게."
+            ],
+            "result": [
+              "여기에는 공이 없네요. 지니가 옆방 문을 바라봐요. 문 너머에 빨간 공이 보여요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "box",
+            "intent": "offer_help",
+            "icon": "📦",
+            "lines": [
+              "상자 뒤를 볼까?",
+              "상자 뒤에서 찾아볼게."
+            ],
+            "result": [
+              "여기에는 공이 없네요. 지니가 옆방 문을 바라봐요. 문 너머에 빨간 공이 보여요."
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "room",
+            "intent": "offer_help",
+            "icon": "🚪",
+            "lines": [
+              "옆방을 볼까?",
+              "옆방에서 찾아볼게."
+            ],
+            "result": [
+              "찾았다! 공을 건네자 지니가 폴짝 뛰어요. 함께 찾아서 즐거워요!"
+            ],
+            "complete": true,
+            "mood": "happy"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hauri-blocks",
+    "title": "하우리와 블록 놀이",
+    "subtitle": "다른 생각도 함께 만들어요.",
+    "icon": "🧩",
+    "place": "school",
+    "character": "hauri",
+    "variations": [
+      {
+        "id": "together",
+        "state": "together",
+        "object": "blocks",
+        "clue": "하우리가 블록을 내밀며 웃어요.",
+        "lines": [
+          "우리 같이 만들래?"
+        ],
+        "hint": "하우리의 말을 듣고, 내 생각도 말해 봐요. 서로 다른 생각도 괜찮아요.",
+        "mood": "happy",
+        "actions": [
+          {
+            "id": "invite",
+            "intent": "invite_play",
+            "icon": "🤝",
+            "lines": [
+              "우리 같이 놀자!",
+              "나랑 함께 만들래?"
+            ],
+            "result": [
+              "좋아! 함께 커다란 집을 만들자."
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "ask",
+            "intent": "ask_preference",
+            "icon": "💬",
+            "lines": [
+              "무엇을 만들고 싶어?",
+              "네 생각을 들려줄래?"
+            ],
+            "result": [
+              "우리 같이 만들래? 너는 어떤 생각이야?"
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "share_idea",
+            "intent": "express_idea",
+            "icon": "💡",
+            "lines": [
+              "나는 집을 만들고 싶어.",
+              "내 생각도 말해 볼게."
+            ],
+            "result": [
+              "나는 지붕을 만들게. 너는 벽을 만들어 볼래?"
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "take_turns",
+            "intent": "take_turns",
+            "icon": "🔄",
+            "lines": [
+              "번갈아 해 볼까?",
+              "네 차례 다음에 내가 할게."
+            ],
+            "result": [
+              "좋아! 하우리가 먼저 블록을 놓고, 지율이가 다음 블록을 놓아요. 서로의 차례를 기다렸어요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          }
+        ]
+      },
+      {
+        "id": "different-block",
+        "state": "different-block",
+        "object": "blocks",
+        "clue": "하우리는 파란 블록을, 지율이는 빨간 블록을 바라봐요.",
+        "lines": [
+          "나는 파란 블록을 쓰고 싶어."
+        ],
+        "hint": "하우리의 말을 듣고, 내 생각도 말해 봐요. 서로 다른 생각도 괜찮아요.",
+        "mood": "thinking",
+        "actions": [
+          {
+            "id": "invite",
+            "intent": "invite_play",
+            "icon": "🤝",
+            "lines": [
+              "우리 같이 놀자!",
+              "나랑 함께 만들래?"
+            ],
+            "result": [
+              "좋아! 너는 빨간 블록, 나는 파란 블록으로 함께 만들자."
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "ask",
+            "intent": "ask_preference",
+            "icon": "💬",
+            "lines": [
+              "무엇을 만들고 싶어?",
+              "네 생각을 들려줄래?"
+            ],
+            "result": [
+              "나는 파란 블록을 쓰고 싶어. 너는 어떤 생각이야?"
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "share_idea",
+            "intent": "express_idea",
+            "icon": "💡",
+            "lines": [
+              "나는 집을 만들고 싶어.",
+              "내 생각도 말해 볼게."
+            ],
+            "result": [
+              "서로 좋아하는 색을 하나씩 골라서 길을 만들었어요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "take_turns",
+            "intent": "take_turns",
+            "icon": "🔄",
+            "lines": [
+              "번갈아 해 볼까?",
+              "네 차례 다음에 내가 할게."
+            ],
+            "result": [
+              "좋아! 하우리가 먼저 블록을 놓고, 지율이가 다음 블록을 놓아요. 서로의 차례를 기다렸어요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          }
+        ]
+      },
+      {
+        "id": "different-plan",
+        "state": "different-plan",
+        "object": "blocks",
+        "clue": "하우리 앞에 자동차 모양 블록이 놓여 있어요.",
+        "lines": [
+          "나는 집보다 자동차를 만들고 싶어."
+        ],
+        "hint": "하우리의 말을 듣고, 내 생각도 말해 봐요. 서로 다른 생각도 괜찮아요.",
+        "mood": "thinking",
+        "actions": [
+          {
+            "id": "invite",
+            "intent": "invite_play",
+            "icon": "🤝",
+            "lines": [
+              "우리 같이 놀자!",
+              "나랑 함께 만들래?"
+            ],
+            "result": [
+              "나는 자동차를 만들고 싶어. 네 생각도 들려줄래?"
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "ask",
+            "intent": "ask_preference",
+            "icon": "💬",
+            "lines": [
+              "무엇을 만들고 싶어?",
+              "네 생각을 들려줄래?"
+            ],
+            "result": [
+              "나는 집보다 자동차를 만들고 싶어. 너는 어떤 생각이야?"
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "share_idea",
+            "intent": "express_idea",
+            "icon": "💡",
+            "lines": [
+              "나는 집을 만들고 싶어.",
+              "내 생각도 말해 볼게."
+            ],
+            "result": [
+              "네 집 옆에 내 자동차를 세우자! 서로의 생각이 만났어요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "take_turns",
+            "intent": "take_turns",
+            "icon": "🔄",
+            "lines": [
+              "번갈아 해 볼까?",
+              "네 차례 다음에 내가 할게."
+            ],
+            "result": [
+              "좋아! 하우리가 먼저 블록을 놓고, 지율이가 다음 블록을 놓아요. 서로의 차례를 기다렸어요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          }
+        ]
+      },
+      {
+        "id": "shortage",
+        "state": "shortage",
+        "object": "blocks",
+        "clue": "하우리와 지율이 사이에 긴 블록이 하나만 남았어요.",
+        "lines": [
+          "긴 블록이 하나밖에 없네."
+        ],
+        "hint": "하우리의 말을 듣고, 내 생각도 말해 봐요. 서로 다른 생각도 괜찮아요.",
+        "mood": "thinking",
+        "actions": [
+          {
+            "id": "invite",
+            "intent": "invite_play",
+            "icon": "🤝",
+            "lines": [
+              "우리 같이 놀자!",
+              "나랑 함께 만들래?"
+            ],
+            "result": [
+              "좋아! 하나 남은 긴 블록은 어떻게 나누면 좋을까?"
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "ask",
+            "intent": "ask_preference",
+            "icon": "💬",
+            "lines": [
+              "무엇을 만들고 싶어?",
+              "네 생각을 들려줄래?"
+            ],
+            "result": [
+              "긴 블록이 하나밖에 없네. 너는 어떤 생각이야?"
+            ],
+            "complete": false,
+            "mood": "thinking"
+          },
+          {
+            "id": "share_idea",
+            "intent": "express_idea",
+            "icon": "💡",
+            "lines": [
+              "나는 집을 만들고 싶어.",
+              "내 생각도 말해 볼게."
+            ],
+            "result": [
+              "먼저 네가 쓰고, 다음에 내가 쓸게. 기다리는 동안 작은 블록을 골라요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "take_turns",
+            "intent": "take_turns",
+            "icon": "🔄",
+            "lines": [
+              "번갈아 해 볼까?",
+              "네 차례 다음에 내가 할게."
+            ],
+            "result": [
+              "좋아! 하우리가 먼저 블록을 놓고, 지율이가 다음 블록을 놓아요. 서로의 차례를 기다렸어요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hauri-feelings",
+    "title": "하우리가 속상해요",
+    "subtitle": "친구의 마음에 귀 기울여요.",
+    "icon": "💛",
+    "place": "school",
+    "character": "hauri",
+    "variations": [
+      {
+        "id": "tower",
+        "state": "tower",
+        "object": "blocks",
+        "clue": "블록 탑이 바닥에 무너져 있어요.",
+        "lines": [
+          "내가 만든 탑이 무너져서 속상해."
+        ],
+        "hint": "친구가 원하는 도움을 물어봐요. 혼자 쉬고 싶다는 말도 존중해요.",
+        "mood": "sad",
+        "actions": [
+          {
+            "id": "ask",
+            "intent": "ask_feeling",
+            "icon": "💬",
+            "lines": [
+              "무슨 일이 있었어?",
+              "어떤 마음인지 말해 줄래?"
+            ],
+            "result": [
+              "내가 만든 탑이 무너져서 속상해."
+            ],
+            "complete": false,
+            "mood": "sad"
+          },
+          {
+            "id": "help",
+            "intent": "offer_help",
+            "icon": "🤲",
+            "lines": [
+              "내가 도와줄까?",
+              "도움이 필요하면 말해 줘."
+            ],
+            "result": [
+              "고마워. 같이 다시 쌓아 줄래? 블록을 하나씩 올리며 새 탑을 만들어요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "listen",
+            "intent": "listen",
+            "icon": "💛",
+            "lines": [
+              "네 이야기를 들어 줄게.",
+              "그랬구나. 마음을 말해 줘."
+            ],
+            "result": [
+              "내 마음을 들어 줘서 고마워. 하우리가 천천히 이야기를 해요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "respect",
+            "intent": "respect_space",
+            "icon": "🌿",
+            "lines": [
+              "조금 쉬어도 괜찮아.",
+              "쉬고 싶으면 기다릴게."
+            ],
+            "result": [
+              "고마워. 쉬고 나서 다시 만나자! 지율이는 옆에서 조용히 다른 놀이를 해요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          }
+        ]
+      },
+      {
+        "id": "toy",
+        "state": "toy",
+        "object": "basket",
+        "clue": "하우리가 빈 장난감 바구니를 바라봐요.",
+        "lines": [
+          "좋아하는 장난감을 못 찾겠어."
+        ],
+        "hint": "친구가 원하는 도움을 물어봐요. 혼자 쉬고 싶다는 말도 존중해요.",
+        "mood": "sad",
+        "actions": [
+          {
+            "id": "ask",
+            "intent": "ask_feeling",
+            "icon": "💬",
+            "lines": [
+              "무슨 일이 있었어?",
+              "어떤 마음인지 말해 줄래?"
+            ],
+            "result": [
+              "좋아하는 장난감을 못 찾겠어."
+            ],
+            "complete": false,
+            "mood": "sad"
+          },
+          {
+            "id": "help",
+            "intent": "offer_help",
+            "icon": "🤲",
+            "lines": [
+              "내가 도와줄까?",
+              "도움이 필요하면 말해 줘."
+            ],
+            "result": [
+              "고마워! 함께 바구니 옆을 찾아보자. 천 아래에서 장난감을 찾았어요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "listen",
+            "intent": "listen",
+            "icon": "💛",
+            "lines": [
+              "네 이야기를 들어 줄게.",
+              "그랬구나. 마음을 말해 줘."
+            ],
+            "result": [
+              "내 마음을 들어 줘서 고마워. 하우리가 천천히 이야기를 해요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "respect",
+            "intent": "respect_space",
+            "icon": "🌿",
+            "lines": [
+              "조금 쉬어도 괜찮아.",
+              "쉬고 싶으면 기다릴게."
+            ],
+            "result": [
+              "고마워. 쉬고 나서 다시 만나자! 지율이는 옆에서 조용히 다른 놀이를 해요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          }
+        ]
+      },
+      {
+        "id": "lost",
+        "state": "lost",
+        "object": "board",
+        "clue": "하우리가 놀이판 옆에서 어깨를 축 늘어뜨려요.",
+        "lines": [
+          "놀이에서 져서 속상해."
+        ],
+        "hint": "친구가 원하는 도움을 물어봐요. 혼자 쉬고 싶다는 말도 존중해요.",
+        "mood": "sad",
+        "actions": [
+          {
+            "id": "ask",
+            "intent": "ask_feeling",
+            "icon": "💬",
+            "lines": [
+              "무슨 일이 있었어?",
+              "어떤 마음인지 말해 줄래?"
+            ],
+            "result": [
+              "놀이에서 져서 속상해."
+            ],
+            "complete": false,
+            "mood": "sad"
+          },
+          {
+            "id": "help",
+            "intent": "offer_help",
+            "icon": "🤲",
+            "lines": [
+              "내가 도와줄까?",
+              "도움이 필요하면 말해 줘."
+            ],
+            "result": [
+              "지금은 도와주기보다 내 이야기를 들어 줬으면 좋겠어."
+            ],
+            "complete": false,
+            "mood": "neutral"
+          },
+          {
+            "id": "listen",
+            "intent": "listen",
+            "icon": "💛",
+            "lines": [
+              "네 이야기를 들어 줄게.",
+              "그랬구나. 마음을 말해 줘."
+            ],
+            "result": [
+              "내 마음을 들어 줘서 고마워. 하우리가 천천히 이야기를 해요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          },
+          {
+            "id": "respect",
+            "intent": "respect_space",
+            "icon": "🌿",
+            "lines": [
+              "조금 쉬어도 괜찮아.",
+              "쉬고 싶으면 기다릴게."
+            ],
+            "result": [
+              "고마워. 쉬고 나서 다시 만나자! 지율이는 옆에서 조용히 다른 놀이를 해요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          }
+        ]
+      },
+      {
+        "id": "rest",
+        "state": "rest",
+        "object": "cushion",
+        "clue": "하우리가 쿠션에 앉아 조용히 쉬고 있어요.",
+        "lines": [
+          "지금은 혼자 조금 쉬고 싶어."
+        ],
+        "hint": "친구가 원하는 도움을 물어봐요. 혼자 쉬고 싶다는 말도 존중해요.",
+        "mood": "neutral",
+        "actions": [
+          {
+            "id": "ask",
+            "intent": "ask_feeling",
+            "icon": "💬",
+            "lines": [
+              "무슨 일이 있었어?",
+              "어떤 마음인지 말해 줄래?"
+            ],
+            "result": [
+              "지금은 혼자 조금 쉬고 싶어."
+            ],
+            "complete": false,
+            "mood": "neutral"
+          },
+          {
+            "id": "help",
+            "intent": "offer_help",
+            "icon": "🤲",
+            "lines": [
+              "내가 도와줄까?",
+              "도움이 필요하면 말해 줘."
+            ],
+            "result": [
+              "고마워. 하지만 지금은 혼자 쉬고 싶어."
+            ],
+            "complete": false,
+            "mood": "neutral"
+          },
+          {
+            "id": "listen",
+            "intent": "listen",
+            "icon": "💛",
+            "lines": [
+              "네 이야기를 들어 줄게.",
+              "그랬구나. 마음을 말해 줘."
+            ],
+            "result": [
+              "지금은 말하지 않고 쉬고 싶어."
+            ],
+            "complete": false,
+            "mood": "neutral"
+          },
+          {
+            "id": "respect",
+            "intent": "respect_space",
+            "icon": "🌿",
+            "lines": [
+              "조금 쉬어도 괜찮아.",
+              "쉬고 싶으면 기다릴게."
+            ],
+            "result": [
+              "고마워. 쉬고 나서 다시 만나자! 지율이는 옆에서 조용히 다른 놀이를 해요."
+            ],
+            "complete": true,
+            "mood": "happy"
+          }
+        ]
+      }
+    ]
+  }
+]
