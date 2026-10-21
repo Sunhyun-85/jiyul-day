@@ -167,6 +167,7 @@ export class HomeScene extends Phaser.Scene {
       });
       item.on('dragstart', (pointer: Phaser.Input.Pointer) => {
         if (this.frozen || this.dragOwner !== undefined) return;
+        this.tweens.killTweensOf(item);
         this.dragOwner = pointer.id;
         this.dragged.add(name);
         this.cancel();

@@ -80,7 +80,7 @@ test('배고픈 지니는 당근보다 밥그릇을 보고 사료를 먹은 뒤 
   expect((await state(page)).owner).toBe('floor');
   expect((await state(page)).positiveFeedback).toBe(false);
   await drag(page, 'food', 350, 880);
-  await page.waitForTimeout(300);
+  await expect.poll(async () => (await state(page)).objects.food).toEqual({ x: 95, y: 878 });
   expect((await state(page)).foodFilled).toBe(false);
   await drag(page, 'food', 454, 807);
   await expect.poll(async () => (await state(page)).animation, { timeout: 7000 }).toBe('eat');
