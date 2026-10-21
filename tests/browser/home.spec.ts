@@ -218,7 +218,19 @@ test('졸린 지니를 침대에서 쉬게 하면 동작 줄이기에서도 초�
 test('정리 도중 당근을 다시 끌어도 인형이 사라지지 않고 새 놀이를 마쳐요', async ({ page }) => {
   await open(page);
   await drag(page, 'carrot', 340, 850);
-  await expect.poll(async () => (await state(page)).owner, { timeout: 12000 }).toBe('jiyul');
+  // Catch the stationary handoff, before the walking animation moves the hit target.
+  await expect
+    .poll(async () => (await state(page)).owner, {
+      timeout: 12000,
+      intervals: [50, 100],
+    })
+    .toBe('jiyul');
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  );
   await drag(page, 'carrot', 350, 870);
   await expect.poll(async () => (await state(page)).owner).toBe('floor');
   await expect.poll(async () => (await state(page)).owner, { timeout: 12000 }).toBe('jini');
