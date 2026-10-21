@@ -1,0 +1,20 @@
+{
+  "narrator": {
+    "language": "ko-KR",
+    "direction": "따뜻한 성인. 차분하고 밝게, 자연스러운 질문 억양. 지나치게 느리지 않게.",
+    "provider": null,
+    "voice_id": null
+  },
+  "hauri": {
+    "language": "ko-KR",
+    "direction": "친근한 어린 친구 느낌. 과장 없이 자연스럽게. 질문과 제안의 억양 구분.",
+    "provider": null,
+    "voice_id": null
+  },
+  "jini": {
+    "kind": "recorded-animal-sfx",
+    "direction": "실제 강아지 짧은 짖음, 낑낑거림, 하품. 사람 TTS 금지."
+  },
+  "future_providers": ["elevenlabs", "google-cloud-tts", "azure-speech"],
+  "policy": "미구현 서비스 어댑터는 명시적인 서비스 선택과 비용 승인 후 별도 CLI에 추가. 키는 서버 환경변수에만 보관. 프런트엔드 API 호출 금지."
+}

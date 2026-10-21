@@ -147,16 +147,35 @@ export function ParentSettings({
                 const action = variation?.actions.find((a) => a.id === r.actionId);
                 return (
                   <article key={r.id}>
-                    <strong>{episode?.title ?? r.episodeId}</strong>
+                    <strong>
+                      {episode?.title ??
+                        (r.episodeId === 'home-free' ? '우리 집 자유놀이' : r.episodeId)}
+                    </strong>
                     <span>{new Date(r.date).toLocaleString('ko-KR')}</span>
                     <p>{variation?.clue ?? r.variationId}</p>
                     <p>
-                      {action?.lines[0] ?? r.actionId} · {(r.responseMs / 1000).toFixed(1)}초
+                      {action?.lines[0] ??
+                        {
+                          carrot: '당근 인형 놀이',
+                          food: '밥 주기',
+                          water: '물 주기',
+                          bed: '쉬기',
+                          pet: '쓰다듬기',
+                          move: '지율이 이동',
+                          take_carrot: '인형 받기',
+                          box: '장난감 상자',
+                        }[r.actionId] ??
+                        r.actionId}
+                      {!r.freePlay && ` · ${(r.responseMs / 1000).toFixed(1)}초`}
                     </p>
                     <small>
                       힌트 {r.hintUsed ? '사용' : '미사용'} · 발화{' '}
                       {r.spoken ? '부모가 관찰함' : '확인 기록 없음'} · {r.repeatCount}번째 놀이 ·{' '}
-                      {r.completed ? '마무리 행동' : '대화 중'}
+                      {r.freePlay
+                        ? '자유놀이 · 평가 없음'
+                        : r.completed
+                          ? '마무리 행동'
+                          : '대화 중'}
                     </small>
                     <details>
                       <summary>표시 순서 보기</summary>

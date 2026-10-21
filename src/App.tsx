@@ -1,22 +1,28 @@
 import { createId } from './engine/createId';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { ParentSettings } from './components/ParentSettings';
 import { GameUI } from './components/GameUI';
 import { ScenarioEngine, episodes } from './engine/ScenarioEngine';
 import { DialogueEngine, type Phase } from './engine/DialogueEngine';
 import { loadSettings, saveSettings, storage } from './engine/ProgressStorage';
-import { BrowserSpeechProvider } from './engine/SpeechProvider';
+import { FileSpeechProvider } from './engine/SpeechProvider';
 import type { Choice, Mood, Place, Session, Settings } from './engine/types';
 import { WorldMap, EpisodeRoom } from './components/WorldMap';
 import { SoundEffects } from './engine/SoundEffects';
+import homeData from './data/home.json';
+import { CharacterStateEngine } from './engine/CharacterStateEngine';
+import type { HomeStart, HomeEvent } from './game/home/HomeScene';
+const HomeGame = lazy(() => import('./components/HomeGame'));
 const engine = new ScenarioEngine();
-const speech = new BrowserSpeechProvider();
+const speech = new FileSpeechProvider();
+const dogSpeech = new FileSpeechProvider();
 const effects = new SoundEffects();
 export default function App() {
-  const [page, setPage] = useState<'home' | 'places' | 'episodes' | 'game'>('home');
+  const [page, setPage] = useState<'home' | 'places' | 'episodes' | 'game' | 'freehome'>('home');
   const [place, setPlace] = useState<Place>('home');
   const [parent, setParent] = useState(false);
   const [settings, setSettings] = useState(loadSettings);
+  const [homeStart, setHomeStart] = useState<HomeStart>();
   const [session, setSession] = useState<Session>();
   const dialogue = useRef<DialogueEngine | undefined>(undefined);
   const [phase, setPhase] = useState<Phase>('observe');
@@ -61,6 +67,7 @@ export default function App() {
   useEffect(() => {
     speechToken.current++;
     speech.stop();
+    dogSpeech.stop();
   }, [settings.voice, settings.speed, parent]);
   const changeSettings = (next: Settings) => {
     setSettings(next);
@@ -190,15 +197,83 @@ export default function App() {
   const leave = (target: typeof page) => {
     speechToken.current++;
     speech.stop();
+    dogSpeech.stop();
     setPage(target);
     setSession(undefined);
     dialogue.current = undefined;
     lock.current = false;
   };
+  const openHome = async () => {
+    if (lock.current) return;
+    lock.current = true;
+    setBusy(true);
+    try {
+      let history = memoryHistory.current['home-free'] ?? [];
+      try {
+        history = await storage.history('home-free');
+      } catch {
+        setStorageError('기록을 저장할 수 없지만 놀이는 계속할 수 있어요.');
+      }
+      const situation = engine.variation.situation(homeData.situations, history);
+      const positions = engine.variation.shuffle([
+        { x: 300, y: 805 },
+        { x: 380, y: 700 },
+        { x: 270, y: 605 },
+        { x: 525, y: 890 },
+      ]);
+      const id = createId();
+      const next: HomeStart = {
+        id,
+        variationId: situation.id,
+        initial: new CharacterStateEngine(situation).state,
+        carrot: positions[0],
+        dog: positions[1],
+        repeatCount: history.length + 1,
+      };
+      memoryHistory.current['home-free'] = [...history, situation.id];
+      try {
+        await storage.visit(id, 'home-free', situation.id);
+      } catch {
+        setStorageError('이번 놀이의 기록을 저장할 수 없어요.');
+      }
+      setHomeStart(next);
+      setPlace('home');
+      setPage('freehome');
+    } finally {
+      lock.current = false;
+      setBusy(false);
+    }
+  };
+  const recordHome = (event: HomeEvent) => {
+    if (!homeStart) return;
+    void storage
+      .add({
+        id: createId(),
+        date: new Date().toISOString(),
+        sessionId: homeStart.id,
+        episodeId: 'home-free',
+        variationId: homeStart.variationId,
+        actionId: event.action,
+        intent: event.outcome,
+        input: event.input,
+        order: [],
+        responseMs: 0,
+        hintUsed: false,
+        spoken: false,
+        repeatCount: homeStart.repeatCount,
+        completed: false,
+        freePlay: { before: event.before, after: event.after, outcome: event.outcome },
+      })
+      .catch(() => setStorageError('이번 놀이 기록을 저장하지 못했어요. 놀이는 계속할 수 있어요.'));
+  };
   const choosePlace = (selected: Place) => {
+    if (selected === 'home') {
+      void openHome();
+      return;
+    }
     setPlace(selected);
     setPage('episodes');
-    say(selected === 'home' ? '지니야, 나 왔어!' : '하우리야, 같이 놀자!');
+    say('하우리야, 같이 놀자!');
     if (settings.voice) effects.play('tap');
   };
   return (
@@ -225,7 +300,7 @@ export default function App() {
           <span className="location-tag">{place === 'home' ? '우리 집' : '유치원'}</span>
         )}
         <div className="toolbar-right">
-          {page === 'game' && (
+          {(page === 'game' || page === 'freehome') && (
             <button
               className="round-control"
               aria-label={settings.voice ? '음성 끄기' : '음성 켜기'}
@@ -252,6 +327,24 @@ export default function App() {
             busy={busy}
             onStart={(id) => void start(id)}
           />
+        )}
+        {page === 'freehome' && homeStart && (
+          <Suspense fallback={<div className="world-loading">우리 집…</div>}>
+            <HomeGame
+              start={homeStart}
+              settings={settings}
+              paused={parent}
+              onLine={say}
+              onEvent={recordHome}
+              onSound={(name) => {
+                if (settings.voice) effects.play(name);
+              }}
+              onDogSound={(sound) => {
+                if (settings.voice) void dogSpeech.speak(sound === 'bark' ? '멍!' : '하암…', 1);
+              }}
+              onStories={() => leave('episodes')}
+            />
+          </Suspense>
         )}
         {page === 'game' && session && (
           <GameUI
@@ -290,7 +383,7 @@ export default function App() {
           </button>
         </div>
       )}
-      {update && page !== 'game' && (
+      {update && page !== 'game' && page !== 'freehome' && (
         <div className="update-notice">
           새 이야기가 준비됐어요.
           <button

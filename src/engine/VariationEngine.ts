@@ -1,4 +1,4 @@
-import type { Action, Choice, Variation } from './types';
+import type { Action, Choice } from './types';
 export function seededRandom(seed: number) {
   return () => {
     seed |= 0;
@@ -20,7 +20,7 @@ export class VariationEngine {
     }
     return result;
   }
-  situation(items: Variation[], history: string[]): Variation {
+  situation<T extends { id: string }>(items: T[], history: string[]): T {
     const fresh = items.filter((v) => !history.slice(-3).includes(v.id));
     const familiar = items.filter((v) => v.id !== history.at(-1));
     const pool = fresh.length && this.random() < 0.65 ? fresh : familiar.length ? familiar : items;

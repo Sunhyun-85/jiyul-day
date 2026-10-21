@@ -59,6 +59,8 @@ async function start(page: Page, episodeId = 'jini-needs') {
   await page
     .getByRole('button', { name: episode.place === 'home' ? '우리 집' : '유치원', exact: true })
     .click();
+  if (episode.place === 'home')
+    await page.getByRole('button', { name: '기존 이야기 고르기' }).click();
   await page.getByRole('button', { name: episode.title, exact: true }).click();
   await ready(page);
   await page
@@ -130,6 +132,7 @@ test('그림 지도와 놀이 장면은 모바일·태블릿에서 스크롤 없
   await noOverflow(page);
   await page.screenshot({ path: 'test-results/v2-map-mobile.png' });
   await page.getByRole('button', { name: '우리 집', exact: true }).click();
+  await page.getByRole('button', { name: '기존 이야기 고르기' }).click();
   await noOverflow(page);
   await page.screenshot({ path: 'test-results/v2-room-mobile.png' });
   await page.getByRole('button', { name: '지니가 배고파요', exact: true }).click();

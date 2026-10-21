@@ -9,7 +9,7 @@ import {
   saveSettings,
   ProgressStorage,
 } from '../src/engine/ProgressStorage';
-import { BrowserSpeechProvider } from '../src/engine/SpeechProvider';
+import { FileSpeechProvider } from '../src/engine/SpeechProvider';
 afterEach(() => vi.unstubAllGlobals());
 describe('상황과 선택지 변형', () => {
   it('같은 시드는 같은 결과를 만들어요', () => {
@@ -176,14 +176,14 @@ describe('저장과 음성 실패', () => {
   });
   it('기기 음성이 없거나 예외가 발생해도 실패 값만 반환해요', async () => {
     vi.stubGlobal('speechSynthesis', { getVoices: () => [], cancel: () => {} });
-    expect(await new BrowserSpeechProvider().speak('안녕', 1)).toBe(false);
+    expect(await new FileSpeechProvider().speak('안녕', 1)).toBe(false);
     vi.stubGlobal('speechSynthesis', {
       cancel: () => {},
       getVoices: () => {
         throw new Error('음성 없음');
       },
     });
-    expect(await new BrowserSpeechProvider().speak('안녕', 1)).toBe(false);
+    expect(await new FileSpeechProvider().speak('안녕', 1)).toBe(false);
   });
 });
 
@@ -201,7 +201,7 @@ it('음성 중지 API가 예외를 내도 놀이 호출을 중단하지 않아�
     },
     getVoices: () => [],
   });
-  const provider = new BrowserSpeechProvider();
+  const provider = new FileSpeechProvider();
   expect(() => provider.stop()).not.toThrow();
   expect(await provider.speak('같이 놀자', 1)).toBe(false);
 });

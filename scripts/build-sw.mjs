@@ -2,7 +2,7 @@ import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 const files = await readdir('dist', { recursive: true });
 const assets = files
-  .filter((f) => /\.(html|js|css|svg|png|webmanifest)$/.test(f) && f !== 'sw.js')
+  .filter((f) => /\.(html|js|css|svg|png|webp|json|mp3|wav|ogg|webmanifest)$/.test(f) && f !== 'sw.js')
   .map((f) => '/' + f);
 const hash = createHash('sha256');
 for (const path of assets) hash.update(await readFile('dist' + path));

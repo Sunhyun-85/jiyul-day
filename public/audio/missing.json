@@ -1,0 +1,778 @@
+[
+  {
+    "dialogue_id": "hauri_041d01827e9a7dd6",
+    "character_id": "hauri",
+    "text": "좋아! 함께 커다란 집을 만들자.",
+    "audio_path": "/audio/hauri/hauri_041d01827e9a7dd6.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_0bc2340bfa497097",
+    "character_id": "hauri",
+    "text": "내 마음을 들어 줘서 고마워. 하우리가 천천히 이야기를 해요.",
+    "audio_path": "/audio/hauri/hauri_0bc2340bfa497097.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_0e357cd4d6cdfeff",
+    "character_id": "hauri",
+    "text": "지금은 말하지 않고 쉬고 싶어.",
+    "audio_path": "/audio/hauri/hauri_0e357cd4d6cdfeff.mp3",
+    "emotion": "neutral",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_0e4aaa6e6e407089",
+    "character_id": "hauri",
+    "text": "지금은 도와주기보다 내 이야기를 들어 줬으면 좋겠어.",
+    "audio_path": "/audio/hauri/hauri_0e4aaa6e6e407089.mp3",
+    "emotion": "neutral",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_14537b8a6a055412",
+    "character_id": "hauri",
+    "text": "나는 집보다 자동차를 만들고 싶어.",
+    "audio_path": "/audio/hauri/hauri_14537b8a6a055412.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_2b4183dfbb90df7c",
+    "character_id": "hauri",
+    "text": "좋아! 하나 남은 긴 블록은 어떻게 나누면 좋을까?",
+    "audio_path": "/audio/hauri/hauri_2b4183dfbb90df7c.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_2e03ed77e0bc2b1e",
+    "character_id": "hauri",
+    "text": "고마워! 함께 바구니 옆을 찾아보자. 천 아래에서 장난감을 찾았어요.",
+    "audio_path": "/audio/hauri/hauri_2e03ed77e0bc2b1e.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_3659ec612d14fc1b",
+    "character_id": "hauri",
+    "text": "나는 파란 블록을 쓰고 싶어. 너는 어떤 생각이야?",
+    "audio_path": "/audio/hauri/hauri_3659ec612d14fc1b.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_3acd335c7b186e0b",
+    "character_id": "hauri",
+    "text": "놀이에서 져서 속상해.",
+    "audio_path": "/audio/hauri/hauri_3acd335c7b186e0b.mp3",
+    "emotion": "sad",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_478e5e10dc163830",
+    "character_id": "hauri",
+    "text": "고마워. 같이 다시 쌓아 줄래? 블록을 하나씩 올리며 새 탑을 만들어요.",
+    "audio_path": "/audio/hauri/hauri_478e5e10dc163830.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_4df9e9d72be5e641",
+    "character_id": "hauri",
+    "text": "고마워. 하지만 지금은 혼자 쉬고 싶어.",
+    "audio_path": "/audio/hauri/hauri_4df9e9d72be5e641.mp3",
+    "emotion": "neutral",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_4e900ed79d9d278e",
+    "character_id": "hauri",
+    "text": "나는 지붕을 만들게. 너는 벽을 만들어 볼래?",
+    "audio_path": "/audio/hauri/hauri_4e900ed79d9d278e.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_5af760f9e04ca00f",
+    "character_id": "hauri",
+    "text": "긴 블록이 하나밖에 없네.",
+    "audio_path": "/audio/hauri/hauri_5af760f9e04ca00f.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_692ba62a696e42a3",
+    "character_id": "hauri",
+    "text": "나는 자동차를 만들고 싶어. 네 생각도 들려줄래?",
+    "audio_path": "/audio/hauri/hauri_692ba62a696e42a3.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_79ea353579144263",
+    "character_id": "hauri",
+    "text": "우리 같이 만들래?",
+    "audio_path": "/audio/hauri/hauri_79ea353579144263.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_90878c074f15f810",
+    "character_id": "hauri",
+    "text": "좋아하는 장난감을 못 찾겠어.",
+    "audio_path": "/audio/hauri/hauri_90878c074f15f810.mp3",
+    "emotion": "sad",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_93098982a966fd4a",
+    "character_id": "hauri",
+    "text": "좋아! 하우리가 먼저 블록을 놓고, 지율이가 다음 블록을 놓아요. 서로의 차례를 기다렸어요.",
+    "audio_path": "/audio/hauri/hauri_93098982a966fd4a.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_966e393dfa0a0669",
+    "character_id": "hauri",
+    "text": "고마워. 쉬고 나서 다시 만나자! 지율이는 옆에서 조용히 다른 놀이를 해요.",
+    "audio_path": "/audio/hauri/hauri_966e393dfa0a0669.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_a030ed3882addcd8",
+    "character_id": "hauri",
+    "text": "네 집 옆에 내 자동차를 세우자! 서로의 생각이 만났어요.",
+    "audio_path": "/audio/hauri/hauri_a030ed3882addcd8.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_a5a29eaacc9bb01a",
+    "character_id": "hauri",
+    "text": "좋아! 너는 빨간 블록, 나는 파란 블록으로 함께 만들자.",
+    "audio_path": "/audio/hauri/hauri_a5a29eaacc9bb01a.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_ad6776e231132487",
+    "character_id": "hauri",
+    "text": "우리 같이 만들래? 너는 어떤 생각이야?",
+    "audio_path": "/audio/hauri/hauri_ad6776e231132487.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_b74e1b78ea9eb99c",
+    "character_id": "hauri",
+    "text": "지금은 혼자 조금 쉬고 싶어.",
+    "audio_path": "/audio/hauri/hauri_b74e1b78ea9eb99c.mp3",
+    "emotion": "neutral",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_dd93a70023aff4f5",
+    "character_id": "hauri",
+    "text": "서로 좋아하는 색을 하나씩 골라서 길을 만들었어요.",
+    "audio_path": "/audio/hauri/hauri_dd93a70023aff4f5.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_e345590d42ec4fd4",
+    "character_id": "hauri",
+    "text": "나는 집보다 자동차를 만들고 싶어. 너는 어떤 생각이야?",
+    "audio_path": "/audio/hauri/hauri_e345590d42ec4fd4.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_e9409316cd7025b3",
+    "character_id": "hauri",
+    "text": "긴 블록이 하나밖에 없네. 너는 어떤 생각이야?",
+    "audio_path": "/audio/hauri/hauri_e9409316cd7025b3.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_ef45515e8765b8d1",
+    "character_id": "hauri",
+    "text": "먼저 네가 쓰고, 다음에 내가 쓸게. 기다리는 동안 작은 블록을 골라요.",
+    "audio_path": "/audio/hauri/hauri_ef45515e8765b8d1.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_fb358789dcb34507",
+    "character_id": "hauri",
+    "text": "나는 파란 블록을 쓰고 싶어.",
+    "audio_path": "/audio/hauri/hauri_fb358789dcb34507.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "hauri_fb3f5bf308a99c35",
+    "character_id": "hauri",
+    "text": "내가 만든 탑이 무너져서 속상해.",
+    "audio_path": "/audio/hauri/hauri_fb3f5bf308a99c35.mp3",
+    "emotion": "sad",
+    "available": false
+  },
+  {
+    "dialogue_id": "jini_038f34a401f97600",
+    "character_id": "jini",
+    "text": "멍!",
+    "audio_path": "/audio/jini/jini_038f34a401f97600.mp3",
+    "emotion": "bark",
+    "available": false
+  },
+  {
+    "dialogue_id": "jini_48a585a021bc2449",
+    "character_id": "jini",
+    "text": "하암…",
+    "audio_path": "/audio/jini/jini_48a585a021bc2449.mp3",
+    "emotion": "yawn",
+    "available": false
+  },
+  {
+    "dialogue_id": "jini_a1c14efa9327e1ca",
+    "character_id": "jini",
+    "text": "낑…",
+    "audio_path": "/audio/jini/jini_a1c14efa9327e1ca.mp3",
+    "emotion": "whine",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_06a8a3a5ef5f4f17",
+    "character_id": "narrator",
+    "text": "지율이가 당근 인형을 들었어.",
+    "audio_path": "/audio/narrator/narrator_06a8a3a5ef5f4f17.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_06c1c0e6b9895259",
+    "character_id": "narrator",
+    "text": "찹찹! 지니가 물을 마셔요. 목이 말랐구나!",
+    "audio_path": "/audio/narrator/narrator_06c1c0e6b9895259.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_09dabd46db7a69eb",
+    "character_id": "narrator",
+    "text": "지니가 목줄을 가져왔어요. 어디 가고 싶을까요?",
+    "audio_path": "/audio/narrator/narrator_09dabd46db7a69eb.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_0a1a9b3163843481",
+    "character_id": "narrator",
+    "text": "지니가 다시 신호를 보내요. 지니가 물그릇을 핥아요. 물이 없네요.",
+    "audio_path": "/audio/narrator/narrator_0a1a9b3163843481.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_0e47041811433720",
+    "character_id": "narrator",
+    "text": "무엇을 하며 놀까?",
+    "audio_path": "/audio/narrator/narrator_0e47041811433720.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_1534169cf402c81a",
+    "character_id": "narrator",
+    "text": "상자 뒤에서 빨간 공이 살짝 보여요.",
+    "audio_path": "/audio/narrator/narrator_1534169cf402c81a.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_1a7f417c9f515f58",
+    "character_id": "narrator",
+    "text": "지금은 배가 고픈가 봐.",
+    "audio_path": "/audio/narrator/narrator_1a7f417c9f515f58.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_1e1761508218186c",
+    "character_id": "narrator",
+    "text": "천천히 둘러봐.",
+    "audio_path": "/audio/narrator/narrator_1e1761508218186c.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_22b83c493f47ad4b",
+    "character_id": "narrator",
+    "text": "헥헥! 지니가 빈 물그릇 앞에 앉았어요.",
+    "audio_path": "/audio/narrator/narrator_22b83c493f47ad4b.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_2895c280a0b17e30",
+    "character_id": "narrator",
+    "text": "하우리가 빈 장난감 바구니를 바라봐요.",
+    "audio_path": "/audio/narrator/narrator_2895c280a0b17e30.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_2accf07ef5e39fed",
+    "character_id": "narrator",
+    "text": "밥 냄새를 맡고 다가왔어.",
+    "audio_path": "/audio/narrator/narrator_2accf07ef5e39fed.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_32d8c11b648e4c90",
+    "character_id": "narrator",
+    "text": "다시 함께 놀아 볼까?",
+    "audio_path": "/audio/narrator/narrator_32d8c11b648e4c90.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_413cb231ce665d5d",
+    "character_id": "narrator",
+    "text": "당근 인형을 물고 왔어.",
+    "audio_path": "/audio/narrator/narrator_413cb231ce665d5d.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_4a68bc33606627f4",
+    "character_id": "narrator",
+    "text": "찾았다! 공을 건네자 지니가 폴짝 뛰어요. 함께 찾아서 즐거워요!",
+    "audio_path": "/audio/narrator/narrator_4a68bc33606627f4.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_4ccd43166d238d0d",
+    "character_id": "narrator",
+    "text": "지니가 물그릇을 핥아요. 물이 없네요.",
+    "audio_path": "/audio/narrator/narrator_4ccd43166d238d0d.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_5e87b95e4af717b8",
+    "character_id": "narrator",
+    "text": "지니가 당근 인형을 보고 꼬리를 흔들어.",
+    "audio_path": "/audio/narrator/narrator_5e87b95e4af717b8.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_5ecf8f1da9911f61",
+    "character_id": "narrator",
+    "text": "여기에는 공이 없네요. 상자 뒤에서 빨간 공이 살짝 보여요.",
+    "audio_path": "/audio/narrator/narrator_5ecf8f1da9911f61.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_60a773e22726ad33",
+    "character_id": "narrator",
+    "text": "친구가 원하는 도움을 물어봐요. 혼자 쉬고 싶다는 말도 존중해요.",
+    "audio_path": "/audio/narrator/narrator_60a773e22726ad33.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_6b988ab4bf635f38",
+    "character_id": "narrator",
+    "text": "지니가 빈 밥그릇을 바라보네.",
+    "audio_path": "/audio/narrator/narrator_6b988ab4bf635f38.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_6e766424a1a930d5",
+    "character_id": "narrator",
+    "text": "지니가 다시 신호를 보내요. 지니가 목줄을 물고 문 앞에서 꼬리를 흔들어요.",
+    "audio_path": "/audio/narrator/narrator_6e766424a1a930d5.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_787775a6273748be",
+    "character_id": "narrator",
+    "text": "잠깐 쉬도록 해 줄까?",
+    "audio_path": "/audio/narrator/narrator_787775a6273748be.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_7966cd1b57c71564",
+    "character_id": "narrator",
+    "text": "지니가 하품하네. 졸린가 봐.",
+    "audio_path": "/audio/narrator/narrator_7966cd1b57c71564.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_7c54a6810755c3ce",
+    "character_id": "narrator",
+    "text": "지니가 물을 마시네.",
+    "audio_path": "/audio/narrator/narrator_7c54a6810755c3ce.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_7e8594d18171ec8c",
+    "character_id": "narrator",
+    "text": "상자 뒤에서 빨간 공이 살짝 보여요. 지니는 혼자 꺼내기 어려운가 봐요.",
+    "audio_path": "/audio/narrator/narrator_7e8594d18171ec8c.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_7fb36d275aec2411",
+    "character_id": "narrator",
+    "text": "지니가 꼬리를 흔들어.",
+    "audio_path": "/audio/narrator/narrator_7fb36d275aec2411.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_83d99ccb40148625",
+    "character_id": "narrator",
+    "text": "장난감 상자가 열렸네.",
+    "audio_path": "/audio/narrator/narrator_83d99ccb40148625.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_85e806c9318436c0",
+    "character_id": "narrator",
+    "text": "지니가 당근 인형을 가져왔네!",
+    "audio_path": "/audio/narrator/narrator_85e806c9318436c0.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_87e9b95901c871e9",
+    "character_id": "narrator",
+    "text": "푹 쉬고 기운이 났나 봐.",
+    "audio_path": "/audio/narrator/narrator_87e9b95901c871e9.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_889c660e9d6f3ac8",
+    "character_id": "narrator",
+    "text": "물그릇이 비어 있구나.",
+    "audio_path": "/audio/narrator/narrator_889c660e9d6f3ac8.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_8f57503a28c8aa41",
+    "character_id": "narrator",
+    "text": "당근 인형을 꺼내 볼까?",
+    "audio_path": "/audio/narrator/narrator_8f57503a28c8aa41.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_9173df90e2b3fddc",
+    "character_id": "narrator",
+    "text": "여기에는 공이 없네요. 소파 아래에서 빨간 공이 살짝 보여요.",
+    "audio_path": "/audio/narrator/narrator_9173df90e2b3fddc.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_918ec6b30a5461b9",
+    "character_id": "narrator",
+    "text": "어른과 함께 목줄을 하고 밖으로 나가요. 지니의 꼬리가 살랑살랑!",
+    "audio_path": "/audio/narrator/narrator_918ec6b30a5461b9.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_92e998f552e65c9b",
+    "character_id": "narrator",
+    "text": "지니가 물그릇을 바라보네.",
+    "audio_path": "/audio/narrator/narrator_92e998f552e65c9b.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_92ff8c7fb93a3f5d",
+    "character_id": "narrator",
+    "text": "하우리야, 같이 놀자!",
+    "audio_path": "/audio/narrator/narrator_92ff8c7fb93a3f5d.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_9416de6cd3fe319b",
+    "character_id": "narrator",
+    "text": "지니가 편안하게 쉬고 있어.",
+    "audio_path": "/audio/narrator/narrator_9416de6cd3fe319b.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_94a73242a515302b",
+    "character_id": "narrator",
+    "text": "하우리가 블록을 내밀며 웃어요.",
+    "audio_path": "/audio/narrator/narrator_94a73242a515302b.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_97a3c2d4e5163b41",
+    "character_id": "narrator",
+    "text": "물을 찹찹 마시고 있어.",
+    "audio_path": "/audio/narrator/narrator_97a3c2d4e5163b41.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_9ba63de55e640cd5",
+    "character_id": "narrator",
+    "text": "지니가 눈을 천천히 감네.",
+    "audio_path": "/audio/narrator/narrator_9ba63de55e640cd5.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_9c236f92713a47b2",
+    "character_id": "narrator",
+    "text": "지니가 밥을 먹네.",
+    "audio_path": "/audio/narrator/narrator_9c236f92713a47b2.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_a134d768b146657c",
+    "character_id": "narrator",
+    "text": "지니가 밥그릇 쪽으로 가네.",
+    "audio_path": "/audio/narrator/narrator_a134d768b146657c.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_a4f46df95e727008",
+    "character_id": "narrator",
+    "text": "킁킁… 지니가 공을 찾고 있어요.",
+    "audio_path": "/audio/narrator/narrator_a4f46df95e727008.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_a5b5260f1df8a4f1",
+    "character_id": "narrator",
+    "text": "지니가 두리번두리번. 공이 어디 갔을까요?",
+    "audio_path": "/audio/narrator/narrator_a5b5260f1df8a4f1.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_a96034d83d22d5de",
+    "character_id": "narrator",
+    "text": "당근 인형으로 함께 놀아 볼까?",
+    "audio_path": "/audio/narrator/narrator_a96034d83d22d5de.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_a96afe1182b3d945",
+    "character_id": "narrator",
+    "text": "냠냠! 지니가 맛있게 밥을 먹어요. 배가 고팠구나!",
+    "audio_path": "/audio/narrator/narrator_a96afe1182b3d945.mp3",
+    "emotion": "happy",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_b0af892f7d63069e",
+    "character_id": "narrator",
+    "text": "소파 아래에서 빨간 공이 살짝 보여요.",
+    "audio_path": "/audio/narrator/narrator_b0af892f7d63069e.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_b4d8fcf3c974b539",
+    "character_id": "narrator",
+    "text": "지니가 목줄을 물고 문 앞에서 꼬리를 흔들어요.",
+    "audio_path": "/audio/narrator/narrator_b4d8fcf3c974b539.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_b702e8f823300495",
+    "character_id": "narrator",
+    "text": "살살 쓰다듬어 주었네.",
+    "audio_path": "/audio/narrator/narrator_b702e8f823300495.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_b7b351662b6da28f",
+    "character_id": "narrator",
+    "text": "하우리와 지율이 사이에 긴 블록이 하나만 남았어요.",
+    "audio_path": "/audio/narrator/narrator_b7b351662b6da28f.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_b84bc02f4e259a8a",
+    "character_id": "narrator",
+    "text": "물을 마시고 싶은가 봐.",
+    "audio_path": "/audio/narrator/narrator_b84bc02f4e259a8a.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_bd2acc81b640c501",
+    "character_id": "narrator",
+    "text": "지니가 다시 신호를 보내요. 지니가 빈 밥그릇을 코로 톡톡 건드려요.",
+    "audio_path": "/audio/narrator/narrator_bd2acc81b640c501.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_be924675a8f4ddf3",
+    "character_id": "narrator",
+    "text": "하우리가 쿠션에 앉아 조용히 쉬고 있어요.",
+    "audio_path": "/audio/narrator/narrator_be924675a8f4ddf3.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_c04981e330bbc06c",
+    "character_id": "narrator",
+    "text": "하우리가 놀이판 옆에서 어깨를 축 늘어뜨려요.",
+    "audio_path": "/audio/narrator/narrator_c04981e330bbc06c.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_c69d1b1057007ba7",
+    "character_id": "narrator",
+    "text": "하우리 앞에 자동차 모양 블록이 놓여 있어요.",
+    "audio_path": "/audio/narrator/narrator_c69d1b1057007ba7.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_cb905f8cea251b78",
+    "character_id": "narrator",
+    "text": "지니가 빈 밥그릇을 코로 톡톡 건드려요.",
+    "audio_path": "/audio/narrator/narrator_cb905f8cea251b78.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_d403173071117f0d",
+    "character_id": "narrator",
+    "text": "지니가 옆방 문을 바라봐요. 문 너머에 빨간 공이 보여요. 지니는 혼자 꺼내기 어려운가 봐요.",
+    "audio_path": "/audio/narrator/narrator_d403173071117f0d.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_d629db42ca4966e9",
+    "character_id": "narrator",
+    "text": "지니가 옆방 문을 바라봐요. 문 너머에 빨간 공이 보여요.",
+    "audio_path": "/audio/narrator/narrator_d629db42ca4966e9.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_dd0e414ff2196479",
+    "character_id": "narrator",
+    "text": "여기에는 공이 없네요. 지니가 옆방 문을 바라봐요. 문 너머에 빨간 공이 보여요.",
+    "audio_path": "/audio/narrator/narrator_dd0e414ff2196479.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_dfccfb4a23cbdd14",
+    "character_id": "narrator",
+    "text": "지니야, 나 왔어!",
+    "audio_path": "/audio/narrator/narrator_dfccfb4a23cbdd14.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_e3fed708b4744f97",
+    "character_id": "narrator",
+    "text": "지니가 물그릇을 들여다보네.",
+    "audio_path": "/audio/narrator/narrator_e3fed708b4744f97.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_e4d6f7648e12850a",
+    "character_id": "narrator",
+    "text": "지니가 밥그릇 냄새를 맡고 있어.",
+    "audio_path": "/audio/narrator/narrator_e4d6f7648e12850a.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_e5420ee296ed0843",
+    "character_id": "narrator",
+    "text": "소파 아래에서 빨간 공이 살짝 보여요. 지니는 혼자 꺼내기 어려운가 봐요.",
+    "audio_path": "/audio/narrator/narrator_e5420ee296ed0843.mp3",
+    "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_ef99d8f1aa7b4aa7",
+    "character_id": "narrator",
+    "text": "지니가 기지개를 켜네.",
+    "audio_path": "/audio/narrator/narrator_ef99d8f1aa7b4aa7.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_efd98b3bcd8b99bb",
+    "character_id": "narrator",
+    "text": "블록 탑이 바닥에 무너져 있어요.",
+    "audio_path": "/audio/narrator/narrator_efd98b3bcd8b99bb.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_fa41c7a8f906ca5a",
+    "character_id": "narrator",
+    "text": "하우리의 말을 듣고, 내 생각도 말해 봐요. 서로 다른 생각도 괜찮아요.",
+    "audio_path": "/audio/narrator/narrator_fa41c7a8f906ca5a.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_ffd77230ffd2b49a",
+    "character_id": "narrator",
+    "text": "하우리는 파란 블록을, 지율이는 빨간 블록을 바라봐요.",
+    "audio_path": "/audio/narrator/narrator_ffd77230ffd2b49a.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_ffeda6195341f7f7",
+    "character_id": "narrator",
+    "text": "꼬르륵… 지니가 빈 밥그릇을 바라봐요.",
+    "audio_path": "/audio/narrator/narrator_ffeda6195341f7f7.mp3",
+    "emotion": "thinking",
+    "available": false
+  }
+]

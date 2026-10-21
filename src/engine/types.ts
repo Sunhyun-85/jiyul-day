@@ -55,6 +55,11 @@ export interface PlayRecord {
   spoken: boolean;
   repeatCount: number;
   completed: boolean;
+  freePlay?: {
+    before: import('./CharacterStateEngine').CharacterState;
+    after: import('./CharacterStateEngine').CharacterState;
+    outcome: string;
+  };
 }
 export interface Session {
   id: string;

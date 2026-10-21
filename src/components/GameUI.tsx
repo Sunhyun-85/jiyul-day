@@ -358,7 +358,7 @@ export function GameUI({
       {transcript && (
         <div className="transcript-panel">
           <p>{text}</p>
-          {voiceFailed && <small>기기 음성이 없어요. 함께 읽어 주세요.</small>}
+          {voiceFailed && <small>녹음이 준비되지 않았어요. 함께 읽어 주세요.</small>}
           <button aria-label="전체 대사 닫기" onClick={() => setTranscript(false)}>
             ✕
           </button>

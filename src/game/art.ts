@@ -1,3 +1,4 @@
+import { art as homeArt } from './home/art';
 import type { Mood } from '../engine/types';
 const wrap = (body: string, w = 240, h = 300) =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">${body}</svg>`;
@@ -21,10 +22,15 @@ export function characterSvg(
         : mood === 'thinking'
           ? '<path d="M115 133h13" stroke="#654331" stroke-width="4" stroke-linecap="round"/>'
           : '<path d="M108 128q13 17 26 0" fill="#bf6858" stroke="#654331" stroke-width="3" stroke-linejoin="round"/>';
-  if (character === 'jini')
+  if (character === 'jini') {
+    const piece = (key: keyof typeof homeArt, x: number, y: number, w: number, h: number) =>
+      homeArt[key]
+        .replace('<svg ', `<svg x="${x}" y="${y}" `)
+        .replace(/width="[0-9]+" height="[0-9]+"/, `width="${w}" height="${h}"`);
     return wrap(
-      `<ellipse cx="120" cy="270" rx="76" ry="13" fill="#817953" opacity=".12"/><path d="M177 209q60-55 32-63" fill="none" stroke="#fffdf7" stroke-width="23" stroke-linecap="round"/><ellipse cx="122" cy="210" rx="65" ry="54" fill="#faf9f2" stroke="#dcd9ce" stroke-width="3"/><ellipse cx="81" cy="253" rx="23" ry="19" fill="#fffdf9"/><ellipse cx="158" cy="253" rx="23" ry="19" fill="#fffdf9"/><path d="M69 183q51 24 104-2" stroke="#7aab90" stroke-width="15" fill="none"/><circle cx="121" cy="197" r="10" fill="#e6b854"/><path d="M43 98Q17 80 35 58Q30 30 59 29Q74 4 101 22Q124 1 143 21Q175 5 184 34Q217 28 213 60Q244 79 220 103Q240 134 214 150Q213 181 183 179Q159 202 139 184Q113 202 91 184Q56 196 49 167Q16 160 30 133Q11 109 43 98" fill="#fffefb" stroke="#dcd9ce" stroke-width="3"/><ellipse cx="51" cy="120" rx="20" ry="36" fill="#ebe7de"/><ellipse cx="195" cy="120" rx="20" ry="36" fill="#ebe7de"/><ellipse cx="77" cy="134" rx="15" ry="9" fill="#f3cbc1"/><ellipse cx="167" cy="134" rx="15" ry="9" fill="#f3cbc1"/>${eyes}<ellipse cx="121" cy="128" rx="10" ry="7" fill="#49392d"/>${mood === 'sad' ? '<path d="M109 150q12-10 24 0" stroke="#49392d" stroke-width="3" fill="none"/>' : '<path d="M109 143q12 15 24 0" stroke="#49392d" stroke-width="3" fill="none"/>'}${mood === 'happy' ? '<path d="M115 149v9q7 12 13 0v-9" fill="#ef9a97"/>' : ''}`,
+      `<ellipse cx="119" cy="263" rx="100" ry="16" fill="#817953" opacity=".12"/>${piece('dogTail', 5, 143, 55, 65)}${piece('dogPaw', 49, 221, 33, 44)}${piece('dogPaw', 141, 219, 33, 44)}${piece('dogBody', 28, 157, 175, 120)}${piece('dogPaw', 72, 228, 33, 44)}${piece('dogPaw', 171, 224, 33, 44)}${piece('dogHead', 83, 105, 140, 120)}${piece(blink ? 'dogClosed' : 'dogEyes', 83, 105, 140, 120)}`,
     );
+  }
   const shirt = character === 'jiyul' ? '#ecb551' : '#8aaa93';
   const hair = character === 'jiyul' ? '#594235' : '#70503a';
   return wrap(
