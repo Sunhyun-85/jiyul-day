@@ -56,12 +56,21 @@ export class GameScene extends Phaser.Scene {
     const { width: w, height: h } = this.scale;
     this.background.setDisplaySize(w, h);
     this.actors.forEach((actor, i) => {
-      const height = Math.min(w * (i ? 0.49 : 0.4), h * 0.33);
+      const mainHeight = Math.min(w * 0.4, h * 0.33);
+      const height =
+        i && this.session.episode.character === 'hauri'
+          ? mainHeight * 0.92
+          : i
+            ? Math.min(w * 0.49, h * 0.33)
+            : mainHeight;
       actor
         .setDisplaySize(height * 0.8, height)
         .setPosition(w * (i ? 0.64 : 0.19), h * 0.66)
         .setAngle(0);
     });
+    this.game.canvas.dataset.actorHeights = JSON.stringify(
+      this.actors.map((actor) => actor.displayHeight),
+    );
     if (this.state.reaction && (this.state.phase === 'response' || this.state.phase === 'complete'))
       this.respond();
   }

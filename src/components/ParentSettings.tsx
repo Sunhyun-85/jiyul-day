@@ -164,6 +164,8 @@ export function ParentSettings({
                           move: '지율이 이동',
                           take_carrot: '인형 받기',
                           box: '장난감 상자',
+                          accident: '지니의 배변 실수',
+                          call_mom: '엄마에게 도움 요청',
                         }[r.actionId] ??
                         r.actionId}
                       {!r.freePlay && ` · ${(r.responseMs / 1000).toFixed(1)}초`}

@@ -313,3 +313,55 @@ test('짧게 두 번 놀고 나면 당근 대신 물과 밥을 원하고 돌봄 
   expect((await state(page)).objects.food).toEqual({ x: 95, y: 878 });
   expect((await state(page)).objects.bottle).toEqual({ x: 221, y: 878 });
 });
+
+test('배고픈 지니도 요구를 유지하며 주변을 걸어 다니고 돌봄을 선택하면 따라요', async ({
+  page,
+}) => {
+  await open(page, 0.4);
+  const initial = (await state(page)).objects.jini;
+  await expect.poll(async () => (await state(page)).roaming, { timeout: 7000 }).toBe(true);
+  await expect
+    .poll(async () => {
+      const p = (await state(page)).objects.jini;
+      return Math.hypot(p.x - initial.x, p.y - initial.y);
+    })
+    .toBeGreaterThan(35);
+  expect((await state(page)).state.desire).toBe('food');
+  await item(page, 'food');
+  await expect.poll(async () => (await state(page)).carePhase).not.toBeNull();
+  expect((await state(page)).roaming).toBe(false);
+  await expect.poll(async () => (await state(page)).state.hunger, { timeout: 12000 }).toBe(15);
+});
+
+test('배변은 가끔 생기고 엄마를 부르면 중앙의 큰 동그라미와 정리로 반응해요', async ({ page }) => {
+  test.setTimeout(90000);
+  await page.clock.install();
+  await open(page);
+  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
+  expect((await state(page)).accident).toBe('clear');
+  await page.clock.runFor(62000);
+  await page.getByRole('button', { name: '부모님', exact: true }).click();
+  await expect(page.getByRole('button', { name: '부모 설정 닫기', exact: true })).toBeVisible();
+  await page.clock.runFor(10000);
+  expect((await state(page)).accident).toBe('clear');
+  await page.getByRole('button', { name: '부모 설정 닫기', exact: true }).click();
+  await page.clock.runFor(11000);
+  await expect(page.getByRole('button', { name: '엄마 부르기', exact: true })).toBeVisible();
+  expect((await state(page)).accident).toBe('waiting');
+  expect((await state(page)).objects.poop).toBeDefined();
+  await page.screenshot({ path: 'test-results/home-accident.png' });
+  await item(page, 'poop');
+  await page.clock.runFor(100);
+  expect((await state(page)).positiveFeedback).toBe(false);
+  expect((await state(page)).accident).toBe('waiting');
+  await page.getByRole('button', { name: '엄마 부르기', exact: true }).click();
+  await page.clock.runFor(300);
+  expect((await state(page)).accident).toBe('cleaning');
+  expect((await state(page)).feedback).toEqual({ x: 360, y: 500, diameter: 340 });
+  await page.screenshot({ path: 'test-results/home-mom-feedback.png' });
+  await page.clock.runFor(2300);
+  expect((await state(page)).accident).toBe('clear');
+  expect((await state(page)).objects.poop).toBeUndefined();
+  expect((await state(page)).positiveFeedback).toBe(false);
+  await expect(page.getByRole('button', { name: '엄마 부르기', exact: true })).toHaveCount(0);
+});

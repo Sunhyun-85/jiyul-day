@@ -12,6 +12,7 @@ import {
 } from '../../engine/CharacterStateEngine';
 import { VariationEngine } from '../../engine/VariationEngine';
 import homeData from '../../data/home.json';
+import { HomeLifeEngine, type AccidentPhase } from '../../engine/HomeLifeEngine';
 export const HOME_W = 720,
   HOME_H = 1000;
 export type Item = 'carrot' | 'food' | 'bottle';
@@ -36,6 +37,9 @@ export interface HomeSnapshot {
   selected: string | null;
   owner: 'floor' | 'jini' | 'jiyul' | 'box';
   positiveFeedback: boolean;
+  feedback: { x: number; y: number; diameter: number } | null;
+  accident: AccidentPhase;
+  roaming: boolean;
   carePhase: CarePhase | null;
   carriedSupply: Supply | null;
   foodFilled: boolean;
@@ -97,6 +101,11 @@ export class HomeScene extends Phaser.Scene {
   private dragged = new Set<string>();
   private lastEmit = 0;
   private lastCue = 0;
+  private life = new HomeLifeEngine();
+  private roaming = false;
+  private nextRoamAt = 2400;
+  private poop?: Phaser.GameObjects.Image;
+  private cleaningBrush?: Phaser.GameObjects.Image;
   // Spread world positions across portrait screens without stretching the artwork.
   private artworkScales = new WeakMap<
     Phaser.GameObjects.GameObject,
@@ -326,6 +335,9 @@ export class HomeScene extends Phaser.Scene {
     return this.behavior === 'tidying' || this.behavior === 'returning' || !!this.careItem;
   }
   private cancel() {
+    this.life.interrupt();
+    this.roaming = false;
+    this.nextRoamAt = this.life.elapsed + 1800;
     if (this.careItem) {
       const item = this.items[this.careItem];
       this.tweens.killTweensOf(item);
@@ -685,6 +697,7 @@ export class HomeScene extends Phaser.Scene {
     const finish = (outcome: string = behavior, settled = true) => {
       if (token !== this.serial) return;
       this.needs.finish(behavior);
+      if (behavior === 'eat') this.life.afterMeal();
       if (settled) this.behavior = 'idle';
       if (meetsCurrentNeed(action, before)) this.showPositiveFeedback();
       this.applyCue();
@@ -751,9 +764,9 @@ export class HomeScene extends Phaser.Scene {
       this.positiveFeedback.destroy();
     }
     const circle = this.add
-      .ellipse(this.dog.x, this.dog.y - 190 / this.verticalZoom, 104, 104, 0xf0ffed, 0.95)
-      .setStrokeStyle(10, 0x48ad68)
-      .setDepth(1700);
+      .ellipse(HOME_W / 2, HOME_H / 2, 340, 340, 0xf0ffed, 0.85)
+      .setStrokeStyle(18, 0x48ad68)
+      .setDepth(3000);
     this.positiveFeedback = circle;
     if (!this.reduced) {
       circle.setScale(0.8);
@@ -778,7 +791,13 @@ export class HomeScene extends Phaser.Scene {
     });
   }
   private idleClue() {
-    if (this.behavior !== 'idle' || this.dragOwner !== undefined) return;
+    if (
+      this.behavior !== 'idle' ||
+      this.dragOwner !== undefined ||
+      this.roaming ||
+      this.life.phase === 'happening'
+    )
+      return;
     const desire = this.needs.state.desire;
     if (desire === 'rest') {
       this.dog.animate('tired');
@@ -788,6 +807,132 @@ export class HomeScene extends Phaser.Scene {
       this.dog.lookAt(desire === 'food' ? 454 : 614);
       this.dog.animate('sit');
     }
+  }
+  private wander() {
+    if (
+      this.reduced ||
+      this.roaming ||
+      this.dragOwner !== undefined ||
+      this.selected ||
+      !['idle', 'seek_food', 'seek_water'].includes(this.behavior) ||
+      ['happening', 'cleaning'].includes(this.life.phase) ||
+      this.owner === 'jini'
+    )
+      return;
+    const desire = this.needs.state.desire;
+    this.nextRoamAt = this.life.elapsed + 1600;
+    if (desire === 'rest') {
+      this.dog.animate('tired');
+      return;
+    }
+    const spots =
+      desire === 'food'
+        ? [
+            { x: 390, y: 710 },
+            { x: 510, y: 745 },
+            { x: 350, y: 790 },
+          ]
+        : desire === 'water'
+          ? [
+              { x: 530, y: 700 },
+              { x: 610, y: 760 },
+              { x: 440, y: 735 },
+            ]
+          : [
+              { x: 300, y: 590 },
+              { x: 490, y: 630 },
+              { x: 380, y: 750 },
+              { x: 260, y: 830 },
+              { x: 540, y: 700 },
+            ];
+    const candidates = spots.filter(
+      (p) =>
+        Phaser.Math.Distance.Between(p.x, p.y, this.dog.x, this.dog.y) > 100 &&
+        Phaser.Math.Distance.Between(p.x, p.y, this.boy.x, this.boy.y) > 115 &&
+        (!this.poop || Phaser.Math.Distance.Between(p.x, p.y, this.poop.x, this.poop.y) > 115),
+    );
+    const target = this.variation.shuffle(candidates)[0];
+    if (!target) return;
+    this.roaming = true;
+    this.travel(target.x, target.y, desire === 'play' ? 'run' : 'walk', this.serial, () => {
+      this.roaming = false;
+      this.nextRoamAt = this.life.elapsed + 1000;
+      this.dog.animate(desire === 'play' ? 'tail_wag' : 'sit');
+      if (desire !== 'play')
+        this.dog.lookAt(desire === 'food' ? this.foodBowl.x : this.waterBowl.x);
+    });
+  }
+  private beginAccident() {
+    // A natural pause in play, never in the middle of feeding, fetching or sleep.
+    if (
+      !this.life.due ||
+      this.behavior !== 'idle' ||
+      this.dragOwner !== undefined ||
+      this.selected ||
+      this.owner === 'jini' ||
+      this.needs.state.desire === 'rest'
+    )
+      return;
+    this.cancel();
+    if (!this.life.begin()) return;
+    this.behavior = 'accident';
+    const token = this.serial;
+    this.dog.animate('sit');
+    this.later(1200, token, () => {
+      this.life.appear();
+      const p = floor(this.dog.x - 45, this.dog.y + 14);
+      this.poop = this.add
+        .image(p.x, p.y, 'home-poop')
+        .setDisplaySize(80, 64)
+        .setDepth(p.y + 1)
+        .setInteractive({ useHandCursor: true });
+      this.poop.on('pointerup', () => {
+        if (!this.frozen && this.life.phase === 'waiting') this.line('accident_hint');
+      });
+      this.line('accident');
+      this.publish();
+      this.travel(Phaser.Math.Clamp(p.x + 140, 160, 620), p.y - 45, 'walk', token, () => {
+        this.behavior = 'idle';
+        this.dog.animate('sit');
+        this.nextRoamAt = this.life.elapsed + 1400;
+        this.publish();
+      });
+    });
+  }
+  private callMom() {
+    if (!this.life.callMom() || !this.poop) return;
+    this.cancel();
+    this.boy.animate('waving');
+    this.line('call_mom');
+    this.showPositiveFeedback();
+    this.callbacks.sound('happy');
+    this.log('call_mom', 'tap', this.needs.state, 'asked_mom');
+    const token = this.serial;
+    this.later(900, token, () => this.boy.animate('idle'));
+    const poop = this.poop;
+    this.cleaningBrush = this.add
+      .image(poop.x - 25, poop.y - 32, 'home-cleaningBrush')
+      .setDisplaySize(80, 90)
+      .setDepth(1800);
+    if (!this.reduced)
+      this.tweens.add({
+        targets: this.cleaningBrush,
+        x: poop.x + 25,
+        angle: 18,
+        duration: 300,
+        yoyo: true,
+        repeat: 2,
+      });
+    // Cleanup belongs to Mom and continues if the child starts another activity.
+    this.time.delayedCall(1900, () => {
+      poop.destroy();
+      this.poop = undefined;
+      this.cleaningBrush?.destroy();
+      this.cleaningBrush = undefined;
+      this.life.cleaned();
+      this.line('cleaned');
+      this.publish();
+    });
   }
   private applyCue() {
     if (!this.cue) return;
@@ -833,6 +978,7 @@ export class HomeScene extends Phaser.Scene {
     if (this.items) {
       for (const [id, obj] of Object.entries({
         ...this.items,
+        ...(this.poop ? { poop: this.poop } : {}),
         jini: this.dog,
         jiyul: this.boy,
         bed: this.bed,
@@ -851,6 +997,11 @@ export class HomeScene extends Phaser.Scene {
       selected: this.selected,
       owner: this.owner,
       positiveFeedback: !!this.positiveFeedback,
+      feedback: this.positiveFeedback
+        ? { x: this.positiveFeedback.x, y: this.positiveFeedback.y, diameter: 340 }
+        : null,
+      accident: this.life.phase,
+      roaming: this.roaming,
       carePhase: this.carePhase,
       carriedSupply: this.carriedSupply,
       foodFilled: this.foodFilled,
@@ -880,7 +1031,8 @@ export class HomeScene extends Phaser.Scene {
   /** Keyboard/screen-reader controls use the same commands as physical scene objects. */
   command(id: string) {
     if (this.frozen || !this.items) return;
-    if (id in this.items) this.tapItem(id as Item);
+    if (id === 'call_mom') this.callMom();
+    else if (id in this.items) this.tapItem(id as Item);
     else if (id === 'jini') {
       if (this.owner === 'jini') this.takeCarrot();
       else this.act('pet', 'tap');
@@ -897,8 +1049,11 @@ export class HomeScene extends Phaser.Scene {
       else this.moveBoy(300, 790);
     }
   }
-  update(time: number) {
-    if (!this.items) return;
+  update(time: number, delta: number) {
+    if (!this.items || this.frozen) return;
+    this.life.advance(delta);
+    this.beginAccident();
+    if (this.life.elapsed >= this.nextRoamAt) this.wander();
     this.fitArtwork();
     if (this.carriedSupply) {
       const hand = this.boy.hand();

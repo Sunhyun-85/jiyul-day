@@ -153,6 +153,7 @@ test('그림 지도와 놀이 장면은 모바일·태블릿에서 스크롤 없
 });
 
 test('밥 주기는 끌어놓기로, 잘못 놓으면 기록 없이 돌아와요', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await setup(page);
   await start(page);
   await expect(page.locator('.play-world')).toHaveAttribute('data-variation', 'hungry');
@@ -172,6 +173,11 @@ test('밥 주기는 끌어놓기로, 잘못 놓으면 기록 없이 돌아와요
   await page.mouse.move(bowl.x + bowl.width / 2, bowl.y + bowl.height / 2, { steps: 8 });
   await page.mouse.up();
   await expect(page.locator('.food-effect')).toBeVisible();
+  await expect(page.locator('.success-ring')).toBeVisible();
+  const ring = (await page.locator('.success-ring').boundingBox())!;
+  const board = (await page.locator('.play-world').boundingBox())!;
+  expect(Math.abs(ring.x + ring.width / 2 - (board.x + board.width / 2))).toBeLessThan(2);
+  expect(Math.abs(ring.y + ring.height / 2 - (board.y + board.height / 2))).toBeLessThan(2);
   await expect(page.locator('.short-speech')).toContainText('냠냠');
   await expect.poll(async () => (await records(page)).length).toBe(1);
   expect((await records(page))[0]).toMatchObject({
@@ -180,6 +186,7 @@ test('밥 주기는 끌어놓기로, 잘못 놓으면 기록 없이 돌아와요
     completed: true,
   });
   await page.screenshot({ path: 'test-results/v2-feeding.png' });
+  await expect(page.locator('.success-ring')).not.toBeVisible({ timeout: 4000 });
   await expect(page.getByRole('button', { name: '다시 놀기', exact: true })).toBeVisible({
     timeout: 10000,
   });
@@ -318,4 +325,27 @@ test('놀이를 마친 뒤 새 버전을 적용해도 설정을 유지해요', a
   } finally {
     await writeFile(path, original);
   }
+});
+
+test('우리는 놀이 화면에서 지율이보다 조금 작아요', async ({ page }) => {
+  await setup(page);
+  await page.getByRole('button', { name: '유치원', exact: true }).click();
+  await page.screenshot({ path: 'test-results/woori-lobby.png' });
+  await page.getByRole('button', { name: '우리와 블록 놀이', exact: true }).click();
+  await ready(page);
+  for (const size of [
+    { width: 360, height: 800 },
+    { width: 800, height: 1100 },
+  ]) {
+    await page.setViewportSize(size);
+    await expect
+      .poll(async () => {
+        const heights = JSON.parse(
+          (await page.locator('canvas').getAttribute('data-actor-heights'))!,
+        );
+        return Number((heights[1] / heights[0]).toFixed(2));
+      })
+      .toBe(0.92);
+  }
+  await page.screenshot({ path: 'test-results/woori-size.png' });
 });

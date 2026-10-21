@@ -275,6 +275,14 @@
       "available": false
     },
     {
+      "dialogue_id": "narrator_09ead5c957ca9db9",
+      "character_id": "narrator",
+      "text": "지니가 바닥에 똥을 쌌네.",
+      "audio_path": "/audio/narrator/narrator_09ead5c957ca9db9.mp3",
+      "emotion": "warm",
+      "available": false
+    },
+    {
       "dialogue_id": "narrator_0a1a9b3163843481",
       "character_id": "narrator",
       "text": "지니가 다시 신호를 보내요. 지니가 물그릇을 핥아요. 물이 없네요.",
@@ -311,6 +319,14 @@
       "character_id": "narrator",
       "text": "지금은 배가 고픈가 봐.",
       "audio_path": "/audio/narrator/narrator_1a7f417c9f515f58.mp3",
+      "emotion": "warm",
+      "available": false
+    },
+    {
+      "dialogue_id": "narrator_1c4f1c0840229566",
+      "character_id": "narrator",
+      "text": "엄마! 지니가 똥 쌌어요!",
+      "audio_path": "/audio/narrator/narrator_1c4f1c0840229566.mp3",
       "emotion": "warm",
       "available": false
     },
@@ -367,6 +383,14 @@
       "character_id": "narrator",
       "text": "당근 인형을 물고 왔어.",
       "audio_path": "/audio/narrator/narrator_413cb231ce665d5d.mp3",
+      "emotion": "warm",
+      "available": false
+    },
+    {
+      "dialogue_id": "narrator_49a7e45c8a9b5246",
+      "character_id": "narrator",
+      "text": "엄마를 불러 볼까?",
+      "audio_path": "/audio/narrator/narrator_49a7e45c8a9b5246.mp3",
       "emotion": "warm",
       "available": false
     },
@@ -719,6 +743,14 @@
       "character_id": "narrator",
       "text": "우리의 말을 듣고, 내 생각도 말해 봐요. 서로 다른 생각도 괜찮아요.",
       "audio_path": "/audio/narrator/narrator_c73ce8cadc293868.mp3",
+      "emotion": "warm",
+      "available": false
+    },
+    {
+      "dialogue_id": "narrator_c82791688c6cc5b2",
+      "character_id": "narrator",
+      "text": "엄마가 깨끗하게 치웠어. 잘 불러 주었네.",
+      "audio_path": "/audio/narrator/narrator_c82791688c6cc5b2.mp3",
       "emotion": "warm",
       "available": false
     },

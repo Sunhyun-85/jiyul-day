@@ -1373,3 +1373,80 @@ button {
     left: 25%;
   }
 }
+
+/* Same baseline and a slightly smaller friend in the school lobby. */
+.lobby-woori {
+  scale: 0.92;
+  transform-origin: center bottom;
+}
+.home-call-mom {
+  position: absolute;
+  left: max(12px, env(safe-area-inset-left));
+  top: 23%;
+  width: 88px;
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  padding: 6px;
+  border: 3px solid #e0b9b5;
+  border-radius: 24px;
+  background: #fff9ed;
+  box-shadow: 0 5px 0 #88654822;
+  color: #765449;
+  font-weight: 800;
+  z-index: 8;
+}
+.home-call-mom img {
+  width: 64px;
+  height: 64px;
+}
+.home-call-mom:disabled {
+  opacity: 1;
+  cursor: default;
+}
+.success-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 47%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 30;
+  animation: success-ring 1.75s ease-out forwards;
+}
+@keyframes success-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 1;
+  }
+  15%,
+  74% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .success-ring {
+    animation: success-ring-still 1.75s step-end forwards !important;
+  }
+}
+@keyframes success-ring-still {
+  0%,
+  74% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.success-ring[data-paused='true'] {
+  animation-play-state: paused !important;
+}

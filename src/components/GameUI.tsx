@@ -138,6 +138,26 @@ export function GameUI({
       data-phase={phase}
       data-variation={variant.id}
     >
+      {reaction?.complete && (
+        <svg
+          key={reaction.id}
+          className="success-ring"
+          data-paused={paused || transcript}
+          viewBox="0 0 360 360"
+          aria-hidden="true"
+          style={{ animationPlayState: paused || transcript ? 'paused' : 'running' }}
+        >
+          <circle
+            cx="180"
+            cy="180"
+            r="160"
+            fill="#f0ffed"
+            fillOpacity="0.85"
+            stroke="#48ad68"
+            strokeWidth="18"
+          />
+        </svg>
+      )}
       <Suspense
         fallback={
           <div className="world-loading" role="status">

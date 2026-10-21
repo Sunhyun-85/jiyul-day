@@ -4,6 +4,21 @@ const svg = (body: string, w: number, h: number) =>
 const fur = '#fffdf6',
   edge = '#d8d3c4';
 export const art = {
+  poop: svg(
+    '<ellipse cx="50" cy="65" rx="42" ry="9" fill="#746149" opacity=".15"/><path d="M17 60Q8 44 28 39Q20 24 41 22Q38 11 49 7Q49 18 60 22Q78 27 70 39Q91 44 83 60Q52 72 17 60Z" fill="#a77950" stroke="#805c3e" stroke-width="3"/><path d="M29 40q20 8 40 0M40 24q9 6 20 0" fill="none" stroke="#c2966c" stroke-width="4" stroke-linecap="round"/>',
+    100,
+    80,
+  ),
+  mom: svg(
+    '<circle cx="60" cy="60" r="57" fill="#fff5df"/><path d="M18 62Q12 10 60 9Q110 11 101 67L91 89H29Z" fill="#674a38"/><path d="M17 116Q18 81 60 81T103 116" fill="#c18da0"/><path d="M48 79v15q12 9 24 0V79" fill="#efbc98"/><ellipse cx="60" cy="55" rx="31" ry="34" fill="#f5c6a0"/><path d="M27 47Q32 11 64 21Q86 21 94 46Q68 42 58 30Q48 46 27 47" fill="#674a38"/><path d="M40 55q5-7 10 0m20 0q5-7 10 0M49 70q11 12 22 0" fill="none" stroke="#684334" stroke-width="3" stroke-linecap="round"/><circle cx="39" cy="65" r="6" fill="#eeb0a0"/><circle cx="81" cy="65" r="6" fill="#eeb0a0"/>',
+    120,
+    120,
+  ),
+  cleaningBrush: svg(
+    '<path d="M47 8v54" stroke="#ba9369" stroke-width="12" stroke-linecap="round"/><path d="M28 60h39l14 36H14Z" fill="#e8bd70" stroke="#b58d51" stroke-width="3"/><path d="M32 70l-6 20m18-20v20m13-20 7 20" stroke="#c89b52" stroke-width="3"/>',
+    95,
+    105,
+  ),
   dogBody: svg(
     `<path d="M35 30Q11 23 12 49Q2 61 13 74Q13 96 38 96H106Q129 98 132 75Q144 58 132 44Q132 23 112 28Q100 12 82 25Q61 13 48 29Z" fill="${fur}" stroke="${edge}" stroke-width="3"/><path d="M28 68q41 22 85 0" fill="none" stroke="#ece9df" stroke-width="5"/>`,
     145,

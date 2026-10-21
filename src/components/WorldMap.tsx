@@ -59,7 +59,7 @@ export function EpisodeRoom({
       <div className="room-greeting">{school ? '우리야, 같이 놀자!' : '지니야, 나 왔어!'}</div>
       <img className="lobby-jiyul" src={svgUrl(characterSvg('jiyul', 'happy'))} alt="지율이" />
       <img
-        className="lobby-friend"
+        className={`lobby-friend${school ? ' lobby-woori' : ''}`}
         src={svgUrl(characterSvg(school ? 'hauri' : 'jini', 'happy'))}
         alt={school ? '우리' : '지니'}
       />

@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Phaser from 'phaser';
+import { svgUrl } from '../game/art';
+import { art } from '../game/home/art';
 import {
   HomeScene,
   HOME_H,
@@ -127,6 +129,17 @@ export default function HomeGame({
         >
           <span className="narrator-dot" />
           {line}
+        </button>
+      )}
+      {(snapshot?.accident === 'waiting' || snapshot?.accident === 'cleaning') && (
+        <button
+          className="home-call-mom"
+          aria-label="엄마 부르기"
+          disabled={paused || snapshot.accident === 'cleaning'}
+          onClick={() => scene.current?.command('call_mom')}
+        >
+          <img src={svgUrl(art.mom)} alt="" />
+          <span>{snapshot.accident === 'cleaning' ? '엄마가 도와줄게' : '엄마!'}</span>
         </button>
       )}
       <button className="home-stories" onClick={onStories} aria-label="기존 이야기 고르기">
