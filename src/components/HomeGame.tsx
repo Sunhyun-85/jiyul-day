@@ -163,6 +163,7 @@ export default function HomeGame({
             ['bowl', '밥그릇에 사료 놓기'],
             ['waterBowl', '물그릇 채우기'],
             ['bed', '지니 침대에서 쉬기'],
+            ['box', '장난감 상자 열고 당근 꺼내기'],
             ['floor', '러그에 놓기 또는 이동'],
           ] as const
         ).map(([id, label]) => (

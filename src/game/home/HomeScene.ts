@@ -30,7 +30,7 @@ export interface HomeSnapshot {
   behavior: string;
   animation: DogAnimation;
   selected: string | null;
-  owner: 'floor' | 'jini' | 'jiyul';
+  owner: 'floor' | 'jini' | 'jiyul' | 'box';
   positiveFeedback: boolean;
   foodFilled: boolean;
   waterFilled: boolean;
@@ -53,7 +53,7 @@ export interface HomeCallbacks {
 }
 const floor = (x: number, y: number) => ({
   x: Phaser.Math.Clamp(x, 65, 655),
-  y: Phaser.Math.Clamp(y, 530, 915),
+  y: Phaser.Math.Clamp(y, 440, 915),
 });
 export class HomeScene extends Phaser.Scene {
   private positiveFeedback?: Phaser.GameObjects.Ellipse;
@@ -75,7 +75,7 @@ export class HomeScene extends Phaser.Scene {
   private needs: CharacterStateEngine;
   private variation = new VariationEngine();
   private selected: Item | 'jiyul' | null = null;
-  private owner: 'floor' | 'jini' | 'jiyul' = 'floor';
+  private owner: 'floor' | 'jini' | 'jiyul' | 'box' = 'floor';
   private foodFilled = false;
   private waterFilled = false;
   private boxOpen = false;
@@ -87,6 +87,26 @@ export class HomeScene extends Phaser.Scene {
   private dragged = new Set<string>();
   private lastEmit = 0;
   private lastCue = 0;
+  // Spread world positions across portrait screens without stretching the artwork.
+  private artworkScales = new WeakMap<
+    Phaser.GameObjects.GameObject,
+    { base: number; applied: number }
+  >();
+  private get verticalZoom() {
+    return this.scale.height / HOME_H;
+  }
+  private fitArtwork() {
+    for (const object of this.children.list) {
+      if (object === this.background || !('scaleY' in object)) continue;
+      const sprite = object as Phaser.GameObjects.Image;
+      let scale = this.artworkScales.get(object);
+      if (!scale) scale = { base: sprite.scaleY, applied: sprite.scaleY };
+      else if (sprite.scaleY !== scale.applied) scale.base = sprite.scaleY;
+      sprite.scaleY = scale.base / this.verticalZoom;
+      scale.applied = sprite.scaleY;
+      this.artworkScales.set(object, scale);
+    }
+  }
   constructor(
     private start: HomeStart,
     private callbacks: HomeCallbacks,
@@ -109,9 +129,9 @@ export class HomeScene extends Phaser.Scene {
       .setScrollFactor(0);
     this.layoutCamera();
     this.scale.on('resize', this.layoutCamera, this);
-    this.bed = this.add.image(595, 596, 'home-bed').setDisplaySize(205, 140).setDepth(560);
-    this.box = this.add.image(104, 602, 'home-box').setDisplaySize(150, 140).setDepth(602);
-    this.lid = this.add.image(103, 558, 'home-lid').setDisplaySize(150, 66).setDepth(603);
+    this.bed = this.add.image(595, 490, 'home-bed').setDisplaySize(205, 140).setDepth(455);
+    this.box = this.add.image(104, 500, 'home-box').setDisplaySize(150, 140).setDepth(500);
+    this.lid = this.add.image(103, 456, 'home-lid').setDisplaySize(150, 66).setDepth(501);
     this.foodBowl = this.add.image(454, 807, 'home-bowl').setDisplaySize(145, 84).setDepth(806);
     this.waterBowl = this.add
       .image(614, 807, 'home-waterBowl')
@@ -133,7 +153,7 @@ export class HomeScene extends Phaser.Scene {
         ),
       );
     this.dog = new DogActor(this, this.start.dog.x, this.start.dog.y).setScale(0.96);
-    this.boy = new HumanActor(this, 165, 740).setScale(0.9);
+    this.boy = new HumanActor(this, 165, 680).setScale(0.9);
     this.items = {
       carrot: this.add
         .image(this.start.carrot.x, this.start.carrot.y, 'home-carrot')
@@ -212,6 +232,7 @@ export class HomeScene extends Phaser.Scene {
     });
     this.input.setDraggable(this.boy);
     this.boy.on('dragstart', () => {
+      if (this.behavior === 'tidying') this.cancel();
       this.selected = 'jiyul';
       this.boy.animate('walk');
     });
@@ -241,25 +262,14 @@ export class HomeScene extends Phaser.Scene {
     });
     tap(this.waterBowl, () => this.drop('bottle', 614, 807, 'tap'));
     tap(this.bed, () => this.act('bed', 'tap'));
-    tap(this.box, () => {
-      this.boxOpen = !this.boxOpen;
-      this.tweens.add({
-        targets: this.lid,
-        y: this.boxOpen ? 514 : 558,
-        angle: this.boxOpen ? -12 : 0,
-        duration: this.reduced ? 0 : 260,
-      });
-      this.line('box');
-      this.callbacks.sound('tap');
-      this.log('box', 'tap', this.needs.state, this.boxOpen ? 'opened' : 'closed');
-    });
+    tap(this.box, () => this.openBox());
     this.input.on('pointerup', (p: Phaser.Input.Pointer, over: Phaser.GameObjects.GameObject[]) => {
       if (
         this.frozen ||
         over.length ||
         p.getDistance() > 12 ||
         this.dragOwner !== undefined ||
-        p.worldY < 485
+        p.worldY < 420
       )
         return;
       const point = floor(p.worldX, p.worldY);
@@ -267,22 +277,32 @@ export class HomeScene extends Phaser.Scene {
         this.drop(this.selected, point.x, point.y, 'tap');
       else this.moveBoy(point.x, point.y);
     });
-    this.cueIcon = this.add.image(0, 0, 'home-carrot').setDisplaySize(35, 43);
+    this.cueIcon = this.add.image(0, -6, 'home-carrot').setDisplaySize(66, 82);
     this.zzz = this.add
-      .text(0, 0, 'z z', { fontFamily: 'sans-serif', fontSize: '24px', color: '#8a947b' })
+      .text(30, -35, 'z z', { fontFamily: 'sans-serif', fontSize: '22px', color: '#78887d' })
       .setOrigin(0.5);
-    this.cue = this.add
-      .container(0, 0, [
-        this.add.ellipse(0, 0, 65, 58, 0xfff9e8, 0.95).setStrokeStyle(2, 0xdfcba1),
-        this.cueIcon,
-        this.zzz,
-      ])
-      .setDepth(1500);
+    const cloud = this.add.graphics();
+    cloud.fillStyle(0xc5bcac, 0.2);
+    cloud.fillEllipse(0, 5, 158, 99);
+    cloud.fillStyle(0xffffff, 1);
+    cloud.fillEllipse(0, 0, 150, 94);
+    cloud.fillCircle(-50, -12, 32);
+    cloud.fillCircle(-23, -34, 30);
+    cloud.fillCircle(18, -35, 31);
+    cloud.fillCircle(51, -10, 30);
+    cloud.fillCircle(-42, 24, 27);
+    cloud.fillCircle(32, 27, 27);
+    cloud.fillCircle(30, 65, 12);
+    cloud.fillCircle(42, 88, 8);
+    cloud.fillCircle(48, 106, 5);
+    this.cue = this.add.container(0, 0, [cloud, this.cueIcon, this.zzz]).setDepth(1500);
     this.events.once('shutdown', () => {
       this.serial++;
       this.input.removeAllListeners();
+      this.scale.off('resize', this.layoutCamera, this);
     });
     this.applyCue();
+    this.fitArtwork();
     this.publish();
     const situation = homeData.situations.find((s) => s.id === this.start.variationId)!;
     this.callbacks.line(this.variation.line(`home:${situation.id}`, situation.intro));
@@ -290,9 +310,10 @@ export class HomeScene extends Phaser.Scene {
     this.callbacks.ready();
   }
   private layoutCamera() {
-    const h = this.scale.height;
-    this.cameras.main.setScroll(0, 1000 - h);
-    this.background.setPosition(360, h / 2).setDisplaySize(720, h);
+    this.cameras.main.setOrigin(0, 0).setScroll(0, 0).setZoom(1, this.verticalZoom);
+    // Crop some empty foreground floor, giving the rug and furniture more space.
+    this.background.setPosition(360, 570).setDisplaySize(720, 1140);
+    this.fitArtwork();
   }
   private line(key: keyof typeof homeData.dialogue) {
     this.callbacks.line(this.variation.line(`home:${key}`, homeData.dialogue[key]));
@@ -304,6 +325,7 @@ export class HomeScene extends Phaser.Scene {
       this.positiveFeedback = undefined;
     }
     this.serial++;
+    if (this.items) this.tweens.killTweensOf(this.items.carrot);
     this.tweens.killTweensOf(this.dog);
     this.tweens.killTweensOf(this.boy);
     this.boy.animate(this.owner === 'jiyul' ? 'holding' : 'idle');
@@ -333,6 +355,11 @@ export class HomeScene extends Phaser.Scene {
     });
   }
   private tapItem(item: Item) {
+    if (item === 'carrot' && this.behavior === 'tidying') this.cancel();
+    if (item === 'carrot' && this.owner === 'box') {
+      this.openBox();
+      return;
+    }
     if (item === 'carrot' && this.owner === 'jini') {
       this.takeCarrot();
       return;
@@ -385,6 +412,88 @@ export class HomeScene extends Phaser.Scene {
       }
     }
   }
+  private setBoxOpen(open: boolean) {
+    this.boxOpen = open;
+    this.tweens.killTweensOf(this.lid);
+    this.tweens.add({
+      targets: this.lid,
+      y: open ? 412 : 456,
+      angle: open ? -12 : 0,
+      duration: this.reduced ? 0 : 260,
+    });
+  }
+  private openBox() {
+    if (this.behavior === 'tidying') this.cancel();
+    this.setBoxOpen(!this.boxOpen);
+    if (this.owner === 'box') {
+      this.owner = 'floor';
+      this.items.carrot.setVisible(true).setPosition(230, 560).setDepth(561);
+      this.selected = 'carrot';
+      this.setBoxOpen(true);
+    }
+    this.line('box');
+    this.callbacks.sound('tap');
+    this.log('box', 'tap', this.needs.state, this.boxOpen ? 'opened' : 'closed');
+  }
+  private tidyCarrot(token: number, done: () => void) {
+    this.behavior = 'tidying';
+    this.dog.lookAt(this.boy.x);
+    this.dog.animate('tail_wag');
+    const mouth = this.dog.mouth();
+    this.boy.animate('walk');
+    this.tweens.killTweensOf(this.boy);
+    this.tweens.add({
+      targets: this.boy,
+      x: mouth.x - 43 * this.boy.scaleX,
+      y: mouth.y + 98 * this.boy.scaleY,
+      duration: this.reduced ? 100 : 550,
+      onComplete: () => {
+        if (token !== this.serial) return;
+        this.owner = 'jiyul';
+        this.selected = null;
+        this.boy.animate('holding');
+        this.line('tidy');
+        this.publish();
+        this.later(750, token, () => {
+          this.setBoxOpen(true);
+          this.boy.animate('walk');
+          const distance = Phaser.Math.Distance.Between(this.boy.x, this.boy.y, 165, 570);
+          this.tweens.add({
+            targets: this.boy,
+            x: 165,
+            y: 570,
+            duration: this.reduced ? 200 : Math.max(900, (distance / 180) * 1000),
+            ease: 'Sine.easeInOut',
+            onComplete: () => {
+              if (token !== this.serial) return;
+              this.boy.animate('holding');
+              this.later(400, token, () => {
+                // The toy visibly leaves the hand and goes into the open box.
+                this.owner = 'floor';
+                this.tweens.add({
+                  targets: this.items.carrot,
+                  x: this.box.x,
+                  y: this.box.y - 15,
+                  duration: this.reduced ? 100 : 500,
+                  ease: 'Sine.easeInOut',
+                  onComplete: () => {
+                    if (token !== this.serial) return;
+                    this.owner = 'box';
+                    this.items.carrot.setVisible(false);
+                    this.boy.animate('happy');
+                    this.setBoxOpen(false);
+                    this.line('tidied');
+                    this.particles(this.box.x, this.box.y - 65, 0xf0c56e);
+                    done();
+                  },
+                });
+              });
+            },
+          });
+        });
+      },
+    });
+  }
   private takeCarrot() {
     if (this.frozen) return;
     this.cancel();
@@ -409,6 +518,7 @@ export class HomeScene extends Phaser.Scene {
     });
   }
   private moveBoy(x: number, y: number) {
+    if (this.behavior === 'tidying') this.cancel();
     this.selected = null;
     this.tweens.killTweensOf(this.boy);
     this.boy.animate('walk');
@@ -463,7 +573,7 @@ export class HomeScene extends Phaser.Scene {
               this.particles(this.dog.x, this.dog.y - 130, 0xf0c56e);
               this.callbacks.sound('happy');
               this.line('fetch');
-              finish('returned_carrot');
+              this.tidyCarrot(token, () => finish('returned_carrot'));
             },
           );
         });
@@ -497,7 +607,7 @@ export class HomeScene extends Phaser.Scene {
       this.callbacks.dogSound('yawn');
       this.dog.animate('tired');
       this.later(500, token, () =>
-        this.travel(590, 608, 'walk', token, () => {
+        this.travel(590, 502, 'walk', token, () => {
           this.dog.animate('lie_down');
           this.later(700, token, () => this.dog.animate('sleep'));
           this.later(4300, token, () => {
@@ -524,7 +634,7 @@ export class HomeScene extends Phaser.Scene {
       this.positiveFeedback.destroy();
     }
     const circle = this.add
-      .ellipse(this.dog.x, this.dog.y - 190, 104, 104, 0xf0ffed, 0.95)
+      .ellipse(this.dog.x, this.dog.y - 190 / this.verticalZoom, 104, 104, 0xf0ffed, 0.95)
       .setStrokeStyle(10, 0x48ad68)
       .setDepth(1700);
     this.positiveFeedback = circle;
@@ -567,10 +677,10 @@ export class HomeScene extends Phaser.Scene {
     const desire = this.needs.state.desire;
     this.cueIcon
       .setTexture(
-        `home-${desire === 'food' ? 'bowl' : desire === 'water' ? 'waterBowl' : 'carrot'}`,
+        `home-${desire === 'food' ? 'bowl' : desire === 'water' ? 'waterBowl' : desire === 'rest' ? 'bed' : 'carrot'}`,
       )
-      .setDisplaySize(desire === 'play' ? 31 : 46, desire === 'play' ? 39 : 30);
-    this.cueIcon.setVisible(desire !== 'rest');
+      .setDisplaySize(desire === 'play' ? 66 : 105, desire === 'play' ? 82 : 65);
+    this.cueIcon.setVisible(true);
     this.zzz.setVisible(desire === 'rest');
   }
   private particles(x: number, y: number, color: number, heart = false) {
@@ -617,7 +727,7 @@ export class HomeScene extends Phaser.Scene {
     }
     return {
       ready: !!this.items,
-      viewport: { height: this.scale.height, offset: this.scale.height - 1000 },
+      viewport: { height: HOME_H, offset: 0 },
       state: { ...this.needs.state },
       behavior: this.behavior,
       animation: this.dog?.animation ?? 'idle',
@@ -656,6 +766,7 @@ export class HomeScene extends Phaser.Scene {
       if (this.owner === 'jini') this.takeCarrot();
       else this.act('pet', 'tap');
     } else if (id === 'bed') this.act('bed', 'tap');
+    else if (id === 'box') this.openBox();
     else if (id === 'waterBowl') this.drop('bottle', 614, 807, 'tap');
     else if (id === 'bowl') this.drop('food', 454, 807, 'tap');
     else if (id === 'jiyul') {
@@ -668,9 +779,10 @@ export class HomeScene extends Phaser.Scene {
   }
   update(time: number) {
     if (!this.items) return;
+    this.fitArtwork();
     this.dog.tick(time, this.reduced);
     this.boy.tick(time, this.reduced);
-    if (this.owner !== 'floor' && this.dragOwner === undefined) {
+    if ((this.owner === 'jini' || this.owner === 'jiyul') && this.dragOwner === undefined) {
       const p = this.owner === 'jini' ? this.dog.mouth() : this.boy.hand();
       this.items.carrot
         .setPosition(p.x, p.y)
@@ -678,7 +790,10 @@ export class HomeScene extends Phaser.Scene {
         .setAngle(this.owner === 'jini' ? 75 : -18);
     } else this.items.carrot.setAngle(0);
     this.cue
-      .setPosition(this.dog.x - 15, this.dog.y - 192)
+      .setPosition(
+        Phaser.Math.Clamp(this.dog.x - 40, 90, 630),
+        this.dog.y - 240 / this.verticalZoom,
+      )
       .setVisible(
         !this.positiveFeedback && (this.behavior === 'idle' || this.behavior.startsWith('seek_')),
       );

@@ -456,6 +456,14 @@
     "available": false
   },
   {
+    "dialogue_id": "narrator_7de8768b7122c316",
+    "character_id": "narrator",
+    "text": "지율이가 받아서 상자에 넣어 줄게.",
+    "audio_path": "/audio/narrator/narrator_7de8768b7122c316.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
     "dialogue_id": "narrator_7e8594d18171ec8c",
     "character_id": "narrator",
     "text": "상자 뒤에서 빨간 공이 살짝 보여요. 지니는 혼자 꺼내기 어려운가 봐요.",
@@ -669,6 +677,14 @@
     "text": "지니가 다시 신호를 보내요. 지니가 빈 밥그릇을 코로 톡톡 건드려요.",
     "audio_path": "/audio/narrator/narrator_bd2acc81b640c501.mp3",
     "emotion": "thinking",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_bd311811f98ea92a",
+    "character_id": "narrator",
+    "text": "당근 인형을 정리했네. 상자를 누르면 다시 꺼낼 수 있어.",
+    "audio_path": "/audio/narrator/narrator_bd311811f98ea92a.mp3",
+    "emotion": "warm",
     "available": false
   },
   {

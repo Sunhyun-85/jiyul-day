@@ -46,18 +46,21 @@ test.beforeEach(({ page }) => {
   });
 });
 test.afterEach(({ page }) => expect(errors.get(page)).toEqual([]));
-test('집에서 당근을 끌면 지니가 물고 돌아오고 다시 받을 수 있어요', async ({ page }) => {
+test('지니가 가져온 당근을 지율이가 받아 정리하고 상자에서 다시 꺼내요', async ({ page }) => {
   await open(page);
   await page.screenshot({ path: 'test-results/home-mobile.png' });
   await drag(page, 'carrot', 330, 850);
   await expect.poll(async () => (await state(page)).owner, { timeout: 10000 }).toBe('jini');
-  await expect.poll(async () => (await state(page)).behavior, { timeout: 10000 }).toBe('idle');
+  await expect.poll(async () => (await state(page)).owner, { timeout: 10000 }).toBe('jiyul');
+  await expect.poll(async () => (await state(page)).owner, { timeout: 10000 }).toBe('box');
+  expect((await state(page)).behavior).toBe('idle');
   expect((await state(page)).state.energy).toBe(79);
   expect((await state(page)).positiveFeedback).toBe(true);
   await page.screenshot({ path: 'test-results/home-carrot.png' });
   await expect.poll(async () => (await state(page)).positiveFeedback).toBe(false);
-  await item(page, 'carrot');
-  await expect.poll(async () => (await state(page)).owner).toBe('jiyul');
+  await item(page, 'box');
+  await expect.poll(async () => (await state(page)).owner).toBe('floor');
+  expect((await state(page)).selected).toBe('carrot');
   await tap(page, 330, 880);
   await expect.poll(async () => (await state(page)).owner, { timeout: 10000 }).toBe('jini');
   await page.setViewportSize({ width: 800, height: 1100 });
@@ -167,7 +170,9 @@ test('휴대폰 터치 끌기와 키보드 대체 조작도 같은 놀이로 연
     });
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   await expect.poll(async () => (await state(page)).owner, { timeout: 10000 }).toBe('jini');
-  await expect.poll(async () => (await state(page)).behavior, { timeout: 10000 }).toBe('idle');
+  await expect.poll(async () => (await state(page)).owner, { timeout: 10000 }).toBe('jiyul');
+  await expect.poll(async () => (await state(page)).owner, { timeout: 10000 }).toBe('box');
+  expect((await state(page)).behavior).toBe('idle');
   const control = page.getByRole('button', { name: '물그릇 채우기', exact: true });
   await control.focus();
   await page.keyboard.press('Enter');
@@ -208,4 +213,19 @@ test('졸린 지니를 침대에서 쉬게 하면 동작 줄이기에서도 초�
   await expect.poll(async () => (await state(page)).state.energy, { timeout: 9000 }).toBe(73);
   expect((await state(page)).positiveFeedback).toBe(true);
   await expect.poll(async () => (await state(page)).positiveFeedback).toBe(false);
+});
+
+test('정리 도중 당근을 다시 끌어도 인형이 사라지지 않고 새 놀이를 마쳐요', async ({ page }) => {
+  await open(page);
+  await drag(page, 'carrot', 340, 850);
+  await expect.poll(async () => (await state(page)).owner, { timeout: 12000 }).toBe('jiyul');
+  await drag(page, 'carrot', 350, 870);
+  await expect.poll(async () => (await state(page)).owner).toBe('floor');
+  await expect.poll(async () => (await state(page)).owner, { timeout: 12000 }).toBe('jini');
+  await page.setViewportSize({ width: 800, height: 1100 });
+  await expect.poll(async () => (await state(page)).owner, { timeout: 12000 }).toBe('box');
+  expect((await state(page)).state.energy).toBe(79);
+  await item(page, 'box');
+  await expect.poll(async () => (await state(page)).selected).toBe('carrot');
+  expect((await state(page)).owner).toBe('floor');
 });
