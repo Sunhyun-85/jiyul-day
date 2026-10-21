@@ -344,6 +344,22 @@
     "available": false
   },
   {
+    "dialogue_id": "narrator_365fa2e9fd8f4094",
+    "character_id": "narrator",
+    "text": "지율이가 사료를 담아 줄게.",
+    "audio_path": "/audio/narrator/narrator_365fa2e9fd8f4094.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
+    "dialogue_id": "narrator_36cdaf525ee70144",
+    "character_id": "narrator",
+    "text": "지율이가 물을 따라 줄게.",
+    "audio_path": "/audio/narrator/narrator_36cdaf525ee70144.mp3",
+    "emotion": "warm",
+    "available": false
+  },
+  {
     "dialogue_id": "narrator_413cb231ce665d5d",
     "character_id": "narrator",
     "text": "당근 인형을 물고 왔어.",

@@ -40,7 +40,7 @@ describe('지니 상태의 관찰 가능한 원인과 결과', () => {
   });
   it('놀이가 거듭되면 예측 가능한 피로·갈증이 생기며 수치는 범위를 벗어나지 않아요', () => {
     const e = new CharacterStateEngine(home.situations[0]);
-    for (let i = 0; i < 6; i++) e.finish('fetch');
+    for (let i = 0; i < 2; i++) e.finish('fetch');
     expect(e.state.desire).toBe('water');
     for (let i = 0; i < 50; i++) e.finish('fetch');
     expect(e.state.energy).toBe(0);
@@ -51,6 +51,20 @@ describe('지니 상태의 관찰 가능한 원인과 결과', () => {
       e.finish('rest');
     }
     expect(e.state).toMatchObject({ hunger: 0, thirst: 0, energy: 100, desire: 'play' });
+  });
+  it('당근만 계속 요구하지 않고 두 번 놀면 물·밥, 더 놀면 휴식으로 이어져요', () => {
+    const e = new CharacterStateEngine(home.situations[0]);
+    e.finish('fetch');
+    expect(e.state.desire).toBe('play');
+    e.finish('fetch');
+    expect(e.state.desire).toBe('water');
+    expect(e.reaction('carrot')).toBe('seek_water');
+    e.finish('drink');
+    expect(e.state.desire).toBe('food');
+    e.finish('eat');
+    expect(e.state.desire).toBe('play');
+    e.finish('fetch');
+    expect(e.state.desire).toBe('rest');
   });
   it('심한 피로를 먼저 쉬고, 그다음 실제 남은 요구를 보여줘요', () => {
     const e = new CharacterStateEngine({ hunger: 80, thirst: 90, energy: 10 });

@@ -50,9 +50,9 @@ export class CharacterStateEngine {
   /** Apply only after the visual action finishes; canceled motion cannot grant care. */
   finish(behavior: DogBehavior) {
     if (behavior === 'fetch') {
-      this.state.energy -= 9;
-      this.state.hunger += 6;
-      this.state.thirst += 9;
+      this.state.energy -= 22;
+      this.state.hunger += 23;
+      this.state.thirst += 28;
     } else if (behavior === 'eat') {
       this.state.hunger -= 70;
     } else if (behavior === 'drink') {
