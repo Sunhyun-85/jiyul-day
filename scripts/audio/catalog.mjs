@@ -27,7 +27,7 @@ export function extractDialogue(episodes, home) {
   for (const s of home.situations) for (const line of s.intro) add(line, 'narrator');
   for (const lines of Object.values(home.dialogue)) for (const line of lines) add(line, 'narrator');
   add('지니야, 나 왔어!', 'narrator');
-  add('하우리야, 같이 놀자!', 'narrator');
+  add('우리야, 같이 놀자!', 'narrator');
   // These entries accept real recorded dog sounds, never human TTS.
   for (const [text, emotion] of [
     ['멍!', 'bark'],

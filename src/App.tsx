@@ -273,7 +273,7 @@ export default function App() {
     }
     setPlace(selected);
     setPage('episodes');
-    say('하우리야, 같이 놀자!');
+    say('우리야, 같이 놀자!');
     if (settings.voice) effects.play('tap');
   };
   return (

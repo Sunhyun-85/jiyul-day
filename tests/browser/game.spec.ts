@@ -64,7 +64,7 @@ async function start(page: Page, episodeId = 'jini-needs') {
   await page.getByRole('button', { name: episode.title, exact: true }).click();
   await ready(page);
   await page
-    .getByRole('button', { name: episode.character === 'jini' ? '지니 만지기' : '하우리 만지기' })
+    .getByRole('button', { name: episode.character === 'jini' ? '지니 만지기' : '우리 만지기' })
     .click();
 }
 async function parent(page: Page) {

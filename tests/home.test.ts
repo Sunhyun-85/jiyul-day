@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, afterEach } from 'vitest';
-import { CharacterStateEngine, desireFor } from '../src/engine/CharacterStateEngine';
+import {
+  CharacterStateEngine,
+  desireFor,
+  meetsCurrentNeed,
+} from '../src/engine/CharacterStateEngine';
 import { VariationEngine, seededRandom } from '../src/engine/VariationEngine';
 import home from '../src/data/home.json';
 import { FileSpeechProvider } from '../src/engine/SpeechProvider';
@@ -135,4 +139,22 @@ describe('녹음 파일 기반 음성', () => {
     expect(validAudioHeader(wav, 'wav')).toBe(true);
     expect(validAudioHeader(wav, 'mp3')).toBe(false);
   });
+});
+
+it('초록 동그라미는 현재 욕구에 맞는 행동에만 표시해요', () => {
+  const actions = ['carrot', 'food', 'water', 'bed', 'pet'] as const;
+  home.situations.forEach((s, index) => {
+    const before = new CharacterStateEngine(s).state;
+    expect(actions.map((a) => meetsCurrentNeed(a, before))).toEqual(
+      actions.map((_a, i) => i === index),
+    );
+  });
+});
+it('친구는 우리로 부르되 기존 캐릭터와 에피소드 ID는 유지해요', () => {
+  expect(JSON.stringify(episodes)).not.toContain('하우리');
+  expect(episodes.find((e) => e.id === 'hauri-blocks')?.title).toBe('우리와 블록 놀이');
+  expect(
+    episodes.find((e) => e.id === 'hauri-feelings')?.character ??
+      episodes.find((e) => e.title === '우리가 속상해요')?.character,
+  ).toBe('hauri');
 });

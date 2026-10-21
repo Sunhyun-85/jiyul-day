@@ -53,7 +53,9 @@ test('집에서 당근을 끌면 지니가 물고 돌아오고 다시 받을 수
   await expect.poll(async () => (await state(page)).owner, { timeout: 10000 }).toBe('jini');
   await expect.poll(async () => (await state(page)).behavior, { timeout: 10000 }).toBe('idle');
   expect((await state(page)).state.energy).toBe(79);
+  expect((await state(page)).positiveFeedback).toBe(true);
   await page.screenshot({ path: 'test-results/home-carrot.png' });
+  await expect.poll(async () => (await state(page)).positiveFeedback).toBe(false);
   await item(page, 'carrot');
   await expect.poll(async () => (await state(page)).owner).toBe('jiyul');
   await tap(page, 330, 880);
@@ -76,6 +78,7 @@ test('배고픈 지니는 당근보다 밥그릇을 보고 사료를 먹은 뒤 
   await tap(page, 340, 870);
   await expect.poll(async () => (await state(page)).behavior).toBe('seek_food');
   expect((await state(page)).owner).toBe('floor');
+  expect((await state(page)).positiveFeedback).toBe(false);
   await drag(page, 'food', 350, 880);
   await page.waitForTimeout(300);
   expect((await state(page)).foodFilled).toBe(false);
@@ -83,6 +86,7 @@ test('배고픈 지니는 당근보다 밥그릇을 보고 사료를 먹은 뒤 
   await expect.poll(async () => (await state(page)).animation, { timeout: 7000 }).toBe('eat');
   await expect.poll(async () => (await state(page)).state.hunger, { timeout: 7000 }).toBe(15);
   expect((await state(page)).foodFilled).toBe(false);
+  expect((await state(page)).positiveFeedback).toBe(true);
   await item(page, 'carrot');
   await tap(page, 340, 875);
   await expect.poll(async () => (await state(page)).owner, { timeout: 10000 }).toBe('jini');
@@ -93,6 +97,7 @@ test('목마름과 피곤함은 물과 휴식으로 달라져요', async ({ page
   await item(page, 'waterBowl');
   await expect.poll(async () => (await state(page)).animation, { timeout: 7000 }).toBe('drink');
   await expect.poll(async () => (await state(page)).state.thirst, { timeout: 7000 }).toBe(13);
+  expect((await state(page)).positiveFeedback).toBe(true);
 });
 test('피곤하면 당근을 쫓지 않고 침대에서 쉬어요', async ({ page }) => {
   await open(page, 0.95);
@@ -192,4 +197,15 @@ test('휴대폰 터치 끌기와 키보드 대체 조작도 같은 놀이로 연
     ),
   ).toBe(true);
   expect(saved.some((r) => r.actionId === 'water' && r.freePlay?.after.thirst === 0)).toBe(true);
+});
+
+test('졸린 지니를 침대에서 쉬게 하면 동작 줄이기에서도 초록 동그라미가 보여요', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await open(page, 0.95);
+  await item(page, 'bed');
+  await expect.poll(async () => (await state(page)).state.energy, { timeout: 9000 }).toBe(73);
+  expect((await state(page)).positiveFeedback).toBe(true);
+  await expect.poll(async () => (await state(page)).positiveFeedback).toBe(false);
 });

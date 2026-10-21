@@ -64,3 +64,13 @@ export class CharacterStateEngine {
     return { ...this.state };
   }
 }
+
+/** Feedback reflects the need shown before the action, not merely any completed motion. */
+export function meetsCurrentNeed(action: HomeAction, before: CharacterState): boolean {
+  return (
+    (action === 'carrot' && before.desire === 'play') ||
+    (action === 'food' && before.desire === 'food') ||
+    (action === 'water' && before.desire === 'water') ||
+    (action === 'bed' && before.desire === 'rest')
+  );
+}

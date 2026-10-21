@@ -56,12 +56,12 @@ export function EpisodeRoom({
   return (
     <section className="episode-room" aria-label={`${school ? '유치원' : '우리 집'} 놀이 고르기`}>
       <img className="world-backdrop" src={svgUrl(playRoomSvg(school))} alt="" />
-      <div className="room-greeting">{school ? '하우리야, 같이 놀자!' : '지니야, 나 왔어!'}</div>
+      <div className="room-greeting">{school ? '우리야, 같이 놀자!' : '지니야, 나 왔어!'}</div>
       <img className="lobby-jiyul" src={svgUrl(characterSvg('jiyul', 'happy'))} alt="지율이" />
       <img
         className="lobby-friend"
         src={svgUrl(characterSvg(school ? 'hauri' : 'jini', 'happy'))}
-        alt={school ? '하우리' : '지니'}
+        alt={school ? '우리' : '지니'}
       />
       <div className="room-activities">
         {episodes

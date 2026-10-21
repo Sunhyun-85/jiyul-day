@@ -5,6 +5,7 @@ import { playRoomSvg } from '../playArt';
 import { DogActor, HumanActor, type DogAnimation } from './Actors';
 import {
   CharacterStateEngine,
+  meetsCurrentNeed,
   type CharacterState,
   type DogBehavior,
   type HomeAction,
@@ -30,6 +31,7 @@ export interface HomeSnapshot {
   animation: DogAnimation;
   selected: string | null;
   owner: 'floor' | 'jini' | 'jiyul';
+  positiveFeedback: boolean;
   foodFilled: boolean;
   waterFilled: boolean;
   objects: Record<string, { x: number; y: number }>;
@@ -54,6 +56,7 @@ const floor = (x: number, y: number) => ({
   y: Phaser.Math.Clamp(y, 530, 915),
 });
 export class HomeScene extends Phaser.Scene {
+  private positiveFeedback?: Phaser.GameObjects.Ellipse;
   private background!: Phaser.GameObjects.Image;
   private dog!: DogActor;
   private boy!: HumanActor;
@@ -294,6 +297,11 @@ export class HomeScene extends Phaser.Scene {
     this.callbacks.line(this.variation.line(`home:${key}`, homeData.dialogue[key]));
   }
   private cancel() {
+    if (this.positiveFeedback) {
+      this.tweens.killTweensOf(this.positiveFeedback);
+      this.positiveFeedback.destroy();
+      this.positiveFeedback = undefined;
+    }
     this.serial++;
     this.tweens.killTweensOf(this.dog);
     this.tweens.killTweensOf(this.boy);
@@ -434,6 +442,7 @@ export class HomeScene extends Phaser.Scene {
       if (token !== this.serial) return;
       this.needs.finish(behavior);
       this.behavior = 'idle';
+      if (meetsCurrentNeed(action, before)) this.showPositiveFeedback();
       this.applyCue();
       this.log(action, input, before, outcome);
     };
@@ -508,6 +517,38 @@ export class HomeScene extends Phaser.Scene {
     }
     this.publish();
   }
+  private showPositiveFeedback() {
+    if (this.positiveFeedback) {
+      this.tweens.killTweensOf(this.positiveFeedback);
+      this.positiveFeedback.destroy();
+    }
+    const circle = this.add
+      .ellipse(this.dog.x, this.dog.y - 190, 104, 104, 0xf0ffed, 0.95)
+      .setStrokeStyle(10, 0x48ad68)
+      .setDepth(1700);
+    this.positiveFeedback = circle;
+    if (!this.reduced) {
+      circle.setScale(0.8);
+      this.tweens.add({
+        targets: circle,
+        scaleX: 1,
+        scaleY: 1,
+        duration: 220,
+        ease: 'Sine.easeOut',
+      });
+    }
+    this.tweens.add({
+      targets: circle,
+      alpha: 0,
+      delay: 1300,
+      duration: this.reduced ? 0 : 450,
+      onComplete: () => {
+        circle.destroy();
+        if (this.positiveFeedback === circle) this.positiveFeedback = undefined;
+        this.publish();
+      },
+    });
+  }
   private idleClue() {
     if (this.behavior !== 'idle' || this.dragOwner !== undefined) return;
     const desire = this.needs.state.desire;
@@ -581,6 +622,7 @@ export class HomeScene extends Phaser.Scene {
       animation: this.dog?.animation ?? 'idle',
       selected: this.selected,
       owner: this.owner,
+      positiveFeedback: !!this.positiveFeedback,
       foodFilled: this.foodFilled,
       waterFilled: this.waterFilled,
       objects,
@@ -636,7 +678,9 @@ export class HomeScene extends Phaser.Scene {
     } else this.items.carrot.setAngle(0);
     this.cue
       .setPosition(this.dog.x - 15, this.dog.y - 192)
-      .setVisible(this.behavior === 'idle' || this.behavior.startsWith('seek_'));
+      .setVisible(
+        !this.positiveFeedback && (this.behavior === 'idle' || this.behavior.startsWith('seek_')),
+      );
     this.ring.setVisible(!!this.selected);
     if (this.selected) {
       const o = this.selected === 'jiyul' ? this.boy : this.items[this.selected];

@@ -61,7 +61,7 @@ export function GameUI({
   const care = episode === 'jini-needs';
   const ball = episode === 'jini-ball';
   const blocks = episode === 'hauri-blocks';
-  const friend = session.episode.character === 'jini' ? '지니' : '하우리';
+  const friend = session.episode.character === 'jini' ? '지니' : '우리';
   const lastAction = variant.actions.find((a) => a.id === reaction?.actionId);
   const currentShort =
     phase === 'complete'
