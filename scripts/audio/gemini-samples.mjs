@@ -6,9 +6,9 @@ import { mkdir, access, writeFile } from 'node:fs/promises';
 import { dialogueId } from './catalog.mjs';
 import { validAudioHeader } from './build.mjs';
 const model = 'gemini-3.8-flash-tts';
-const voice = 'Puck';
 const maxOutputTokens = 750;
 const titleOnly = process.argv.includes('--title');
+const voice = titleOnly ? 'Puck' : 'Leda';
 const character = titleOnly ? 'narrator' : 'hauri';
 const texts = titleOnly
   ? ['지율이의 신나는 하루']
@@ -19,8 +19,8 @@ const texts = titleOnly
     ];
 const direction = titleOnly
   ? '한국어로 어린이 게임 제목을 따뜻하고 밝게 소개하세요. 자연스럽고 경쾌하게, 과장하거나 노래하지 말고 제목만 읽으세요. 배경음은 넣지 마세요.'
-  : '한국어로 친구에게 직접 이야기하듯 밝고 다정하게 말해 주세요. 친근한 어린 친구 느낌이지만 억지로 높은 목소리나 과장된 만화 연기는 피하세요. 자연스러운 대화 속도로, 질문은 질문 억양으로 말하세요. 아래 대사만 읽고 설명이나 배경음은 넣지 마세요.';
-const folder = titleOnly ? 'audio-previews/title-puck' : 'audio-previews/woori-puck';
+  : '가상의 한국인 유치원생 남자아이 우리가 또래 친구 지율이에게 말하는 장면입니다. 다섯 살 어린아이처럼 작고 맑은 높은 음색, 가볍고 부드러운 발성, 짧은 호흡으로 연기하세요. 변성기 전 아이의 목소리로, 성인 남성의 낮고 굵은 공명이나 어른이 아이에게 설명하는 말투를 쓰지 마세요. 귀여움을 과장하거나 소리를 억지로 높이지 말고 또래끼리 노는 자연스러운 한국어 반말로 말하세요. 질문은 호기심 있게, 위로는 다정하게 표현하세요. 대사만 읽고 배경음이나 설명은 넣지 마세요.';
+const folder = titleOnly ? 'audio-previews/title-puck' : 'audio-previews/woori-leda-child-v1';
 const jobs = texts.map((text) => ({
   text,
   id: dialogueId(character, text),

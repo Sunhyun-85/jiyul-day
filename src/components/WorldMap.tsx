@@ -5,11 +5,9 @@ import { mapSvg, playRoomSvg, toySvg, buildingSvg } from '../game/playArt';
 export function WorldMap({
   onPlace,
   paused,
-  onTitle,
 }: {
   onPlace: (place: Place) => void;
   paused: boolean;
-  onTitle: () => void;
 }) {
   const actor = useRef<HTMLImageElement>(null);
   const travel = useRef<Animation | null>(null);
@@ -43,9 +41,7 @@ export function WorldMap({
     <section className="world-map" aria-label="놀이 지도">
       <img className="world-backdrop" src={svgUrl(mapSvg())} alt="" />
       <h1 className="map-title">
-        <button className="map-title-voice" aria-label="제목 음성 듣기" onClick={onTitle}>
-          <span>지율이의</span>신나는 하루
-        </button>
+        <span>지율이의</span>신나는 하루
       </h1>
       <button
         className="map-place map-school"

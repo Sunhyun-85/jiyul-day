@@ -1,3 +1,4 @@
+import { useTitleGreeting } from './components/useTitleGreeting';
 import { createId } from './engine/createId';
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { ParentSettings } from './components/ParentSettings';
@@ -39,6 +40,7 @@ export default function App() {
   const [storageError, setStorageError] = useState('');
   const [busy, setBusy] = useState(false);
   const [update, setUpdate] = useState<ServiceWorker>();
+  useTitleGreeting((page === 'home' || page === 'places') && settings.voice && !parent);
   const shownAt = useRef(0);
   const lock = useRef(false);
   const speechToken = useRef(0);
@@ -322,11 +324,7 @@ export default function App() {
       </nav>
       <main className="game-main" inert={parent}>
         {(page === 'home' || page === 'places') && (
-          <WorldMap
-            onPlace={choosePlace}
-            paused={parent}
-            onTitle={() => say('지율이의 신나는 하루', 1)}
-          />
+          <WorldMap onPlace={choosePlace} paused={parent} />
         )}
         {page === 'episodes' && (
           <EpisodeRoom

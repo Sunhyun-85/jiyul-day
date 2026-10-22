@@ -79,7 +79,7 @@ test('생성한 제목과 우리 목소리를 실제 파일로 재생하고 부�
     };
   });
   await page.goto('/');
-  await page.getByRole('button', { name: '제목 음성 듣기' }).click();
+  await page.locator('.map-greeting').click();
   await expect
     .poll(() =>
       page.evaluate(() => {
@@ -135,7 +135,7 @@ test('생성한 제목과 우리 목소리를 실제 파일로 재생하고 부�
   });
   await context.setOffline(true);
   await page.reload();
-  await page.getByRole('button', { name: '제목 음성 듣기' }).click();
+  await page.locator('.map-greeting').click();
   await expect
     .poll(() => page.evaluate(() => (window as any).playedAudio.at(-1)?.currentTime ?? 0))
     .toBeGreaterThan(0);
