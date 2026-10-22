@@ -59,8 +59,7 @@ async function start(page: Page, episodeId = 'jini-needs') {
   await page
     .getByRole('button', { name: episode.place === 'home' ? '우리 집' : '유치원', exact: true })
     .click();
-  if (episode.place === 'home')
-    await page.getByRole('button', { name: '기존 이야기 고르기' }).click();
+  await page.getByRole('button', { name: '기존 이야기 고르기' }).click();
   await page.getByRole('button', { name: episode.title, exact: true }).click();
   await ready(page);
   await page
@@ -214,6 +213,8 @@ for (const scenario of [
 }
 
 test('4개 이야기가 음성 없이 끝나고 부모 기록·설정은 남아요', async ({ page }) => {
+  // Four map walks and two friend greetings deliberately take real animation time.
+  test.setTimeout(60000);
   await setup(page);
   for (const episode of data) {
     await start(page, episode.id);
@@ -330,6 +331,7 @@ test('놀이를 마친 뒤 새 버전을 적용해도 설정을 유지해요', a
 test('우리는 놀이 화면에서 지율이보다 조금 작아요', async ({ page }) => {
   await setup(page);
   await page.getByRole('button', { name: '유치원', exact: true }).click();
+  await page.getByRole('button', { name: '기존 이야기 고르기' }).click();
   await page.screenshot({ path: 'test-results/woori-lobby.png' });
   await page.getByRole('button', { name: '우리와 블록 놀이', exact: true }).click();
   await ready(page);

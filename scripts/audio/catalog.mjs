@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 export function dialogueId(character, text) {
   return `${character}_${createHash('sha256').update(text.normalize('NFC')).digest('hex').slice(0, 16)}`;
 }
-export function extractDialogue(episodes, home) {
+export function extractDialogue(episodes, home, school = { dialogue: [] }) {
   const lines = new Map();
   function add(text, character, emotion = 'warm') {
     if (!text?.trim()) return;
@@ -26,6 +26,7 @@ export function extractDialogue(episodes, home) {
     }
   for (const s of home.situations) for (const line of s.intro) add(line, 'narrator');
   for (const lines of Object.values(home.dialogue)) for (const line of lines) add(line, 'narrator');
+  for (const line of school.dialogue) add(line, 'hauri', 'friendly');
   add('지니야, 나 왔어!', 'narrator');
   add('우리야, 같이 놀자!', 'narrator');
   // These entries accept real recorded dog sounds, never human TTS.

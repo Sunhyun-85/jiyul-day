@@ -1450,3 +1450,208 @@ button {
 .success-ring[data-paused='true'] {
   animation-play-state: paused !important;
 }
+
+/* School play uses the same full-screen Phaser world as the house. */
+.map-jiyul.map-walking {
+  animation: none;
+  z-index: 4;
+  transform-origin: bottom center;
+}
+.world-map .map-place:disabled {
+  opacity: 1;
+}
+.school-game {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #f2dfb7;
+}
+.school-bubble {
+  position: absolute;
+  top: 24%;
+  right: 8%;
+  width: 66%;
+  max-width: 390px;
+  border: 3px solid #e5d7ba;
+  border-radius: 25px 25px 6px 25px;
+  padding: 12px 16px;
+  background: #fffdf3;
+  box-shadow: 0 5px 0 #927a4d13;
+  font-size: clamp(16px, 3.3vw, 22px);
+  color: #655540;
+  line-height: 1.45;
+  z-index: 2;
+}
+.school-bubble > span {
+  display: block;
+  font-size: 12px;
+  color: #668b70;
+  margin-bottom: 2px;
+}
+.requested-block {
+  display: block;
+  width: 82px;
+  height: 32px;
+  margin: 7px auto 0;
+}
+.school-score {
+  position: absolute;
+  top: 12%;
+  left: 6%;
+  right: 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff7dfed;
+  border-radius: 20px;
+  padding: 9px 14px;
+  color: #665539;
+  font-weight: 800;
+}
+.school-score b {
+  font-size: 28px;
+  margin: 0 5px;
+  color: #458b79;
+}
+.school-score small {
+  font-size: 12px;
+  font-weight: 500;
+}
+.school-controls {
+  position: absolute;
+  bottom: max(15px, env(safe-area-inset-bottom));
+  left: 5%;
+  width: 90%;
+  z-index: 3;
+  text-align: center;
+}
+.school-game-choices,
+.school-hand-choices {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+.school-game-choices button,
+.school-hand-choices button {
+  background: #fff9e9;
+  border: 3px solid #dec69a;
+  box-shadow: 0 5px 0 #aa87594d;
+  border-radius: 24px;
+  color: #6c593d;
+  font-weight: 800;
+  padding: 8px;
+  flex: 1;
+  max-width: 175px;
+}
+.school-game-choices img {
+  height: clamp(60px, 12vh, 108px);
+  width: 100%;
+  object-fit: contain;
+}
+.school-hand-choices img {
+  height: clamp(58px, 11vh, 90px);
+  width: 100%;
+  object-fit: contain;
+}
+.school-game-choices span,
+.school-hand-choices span {
+  display: block;
+}
+.school-prompt {
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 9px;
+  padding: 6px 13px;
+  border-radius: 20px;
+  background: #fff7e9ee;
+  color: #65583f;
+  font-size: 15px;
+  font-weight: 700;
+}
+.school-colors {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+  max-width: 440px;
+  margin: auto;
+}
+.school-colors button {
+  min-height: 55px;
+  border-radius: 14px;
+  padding: 5px;
+  background: #fff9e9;
+  box-shadow: 0 3px 0 #a88b6555;
+}
+.school-colors img {
+  display: block;
+  width: 100%;
+  max-width: 75px;
+  height: 26px;
+  margin: auto;
+}
+.school-colors span {
+  display: block;
+  font-size: 12px;
+  color: #5b503c;
+}
+.school-next {
+  background: #fff6d8;
+  border: 3px solid #cfb77e;
+  border-radius: 22px;
+  min-height: 52px;
+  min-width: 150px;
+  padding: 9px 20px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #5f7659;
+  box-shadow: 0 4px 0 #9c845c33;
+}
+.school-stories {
+  position: absolute;
+  left: 5%;
+  top: 19%;
+  z-index: 3;
+  background: #fff8e5df;
+  border-radius: 18px;
+  font-size: 12px;
+  padding: 8px 13px;
+  min-height: 44px;
+  color: #746445;
+}
+.school-hands-label {
+  position: absolute;
+  top: 77%;
+  left: 9%;
+  right: 9%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #5d5141;
+  font-weight: 700;
+}
+@media (max-height: 600px) {
+  .school-bubble {
+    top: 25%;
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+  .school-score {
+    top: 13%;
+    padding: 2px 12px;
+  }
+  .school-controls {
+    bottom: 6px;
+  }
+  .school-colors {
+    grid-template-columns: repeat(7, 1fr);
+    max-width: 650px;
+  }
+  .school-prompt {
+    font-size: 12px;
+    padding: 3px 8px;
+    margin-bottom: 4px;
+  }
+  .school-stories {
+    top: 24%;
+  }
+}

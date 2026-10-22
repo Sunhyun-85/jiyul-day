@@ -1,7 +1,42 @@
+import { useEffect, useRef, useState } from 'react';
 import type { Episode, Place } from '../engine/types';
 import { characterSvg, svgUrl } from '../game/art';
 import { mapSvg, playRoomSvg, toySvg, buildingSvg } from '../game/playArt';
-export function WorldMap({ onPlace }: { onPlace: (place: Place) => void }) {
+export function WorldMap({
+  onPlace,
+  paused,
+}: {
+  onPlace: (place: Place) => void;
+  paused: boolean;
+}) {
+  const actor = useRef<HTMLImageElement>(null);
+  const travel = useRef<Animation | null>(null);
+  const [destination, setDestination] = useState<Place>();
+  const latest = useRef(onPlace);
+  latest.current = onPlace;
+  useEffect(() => () => travel.current?.cancel(), []);
+  useEffect(() => {
+    if (paused) travel.current?.pause();
+    else travel.current?.play();
+  }, [paused]);
+  const walk = (place: Place, button: HTMLButtonElement) => {
+    if (destination || paused || !actor.current) return;
+    setDestination(place);
+    const from = actor.current.getBoundingClientRect();
+    const to = button.getBoundingClientRect();
+    const dx = to.x + to.width * 0.5 - (from.x + from.width * 0.5);
+    const dy = to.y + to.height * 0.82 - from.bottom;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const steps = Array.from({ length: 13 }, (_, i) => ({
+      transform: `translate(${(dx * i) / 12}px, ${(dy * i) / 12 - (reduced ? 0 : (i % 2) * 5)}px) rotate(${reduced ? 0 : i % 2 ? 3 : -3}deg) scale(${1 - (0.18 * i) / 12})`,
+    }));
+    travel.current = actor.current.animate(steps, {
+      duration: reduced ? 250 : 1700,
+      fill: 'forwards',
+      easing: 'ease-in-out',
+    });
+    travel.current.onfinish = () => latest.current(place);
+  };
   return (
     <section className="world-map" aria-label="놀이 지도">
       <img className="world-backdrop" src={svgUrl(mapSvg())} alt="" />
@@ -11,19 +46,36 @@ export function WorldMap({ onPlace }: { onPlace: (place: Place) => void }) {
       <button
         className="map-place map-school"
         aria-label="유치원"
-        onClick={() => onPlace('school')}
+        disabled={!!destination}
+        onClick={(e) => walk('school', e.currentTarget)}
       >
         <img src={svgUrl(buildingSvg(true))} alt="" />
         <span className="wood-sign">유치원</span>
         <img className="map-friend" src={svgUrl(characterSvg('hauri', 'happy'))} alt="" />
       </button>
-      <button className="map-place map-home" aria-label="우리 집" onClick={() => onPlace('home')}>
+      <button
+        className="map-place map-home"
+        aria-label="우리 집"
+        disabled={!!destination}
+        onClick={(e) => walk('home', e.currentTarget)}
+      >
         <img src={svgUrl(buildingSvg())} alt="" />
         <span className="wood-sign">우리 집</span>
         <img className="map-friend" src={svgUrl(characterSvg('jini', 'happy'))} alt="" />
       </button>
-      <img className="map-jiyul" src={svgUrl(characterSvg('jiyul', 'happy'))} alt="지율이" />
-      <span className="map-greeting">어디 갈까?</span>
+      <img
+        ref={actor}
+        className={`map-jiyul${destination ? ' map-walking' : ''}`}
+        src={svgUrl(characterSvg('jiyul', 'happy'))}
+        alt="지율이"
+      />
+      <span className="map-greeting" role="status">
+        {destination
+          ? destination === 'home'
+            ? '집으로 가자!'
+            : '우리 만나러 가자!'
+          : '어디 갈까?'}
+      </span>
       <span className="map-flower flower-a">✿</span>
       <span className="map-flower flower-b">✿</span>
     </section>

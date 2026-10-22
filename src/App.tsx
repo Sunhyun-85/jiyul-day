@@ -12,13 +12,16 @@ import { SoundEffects } from './engine/SoundEffects';
 import homeData from './data/home.json';
 import { CharacterStateEngine } from './engine/CharacterStateEngine';
 import type { HomeStart, HomeEvent } from './game/home/HomeScene';
+const SchoolGame = lazy(() => import('./components/SchoolGame'));
 const HomeGame = lazy(() => import('./components/HomeGame'));
 const engine = new ScenarioEngine();
 const speech = new FileSpeechProvider();
 const dogSpeech = new FileSpeechProvider();
 const effects = new SoundEffects();
 export default function App() {
-  const [page, setPage] = useState<'home' | 'places' | 'episodes' | 'game' | 'freehome'>('home');
+  const [page, setPage] = useState<
+    'home' | 'places' | 'episodes' | 'game' | 'freehome' | 'schoolplay'
+  >('home');
   const [place, setPlace] = useState<Place>('home');
   const [parent, setParent] = useState(false);
   const [settings, setSettings] = useState(loadSettings);
@@ -272,8 +275,7 @@ export default function App() {
       return;
     }
     setPlace(selected);
-    setPage('episodes');
-    say('우리야, 같이 놀자!');
+    setPage('schoolplay');
     if (settings.voice) effects.play('tap');
   };
   return (
@@ -300,7 +302,7 @@ export default function App() {
           <span className="location-tag">{place === 'home' ? '우리 집' : '유치원'}</span>
         )}
         <div className="toolbar-right">
-          {(page === 'game' || page === 'freehome') && (
+          {(page === 'game' || page === 'freehome' || page === 'schoolplay') && (
             <button
               className="round-control"
               aria-label={settings.voice ? '음성 끄기' : '음성 켜기'}
@@ -319,7 +321,9 @@ export default function App() {
         </div>
       </nav>
       <main className="game-main" inert={parent}>
-        {(page === 'home' || page === 'places') && <WorldMap onPlace={choosePlace} />}
+        {(page === 'home' || page === 'places') && (
+          <WorldMap onPlace={choosePlace} paused={parent} />
+        )}
         {page === 'episodes' && (
           <EpisodeRoom
             place={place}
@@ -327,6 +331,40 @@ export default function App() {
             busy={busy}
             onStart={(id) => void start(id)}
           />
+        )}
+        {page === 'schoolplay' && (
+          <Suspense fallback={<div className="world-loading">유치원…</div>}>
+            <SchoolGame
+              paused={parent}
+              onLine={say}
+              onSound={(name) => {
+                if (settings.voice) effects.play(name);
+              }}
+              onFinish={(event) => {
+                void storage
+                  .add({
+                    id: createId(),
+                    date: new Date().toISOString(),
+                    sessionId: createId(),
+                    episodeId: `school-${event.mode}`,
+                    variationId: event.mode,
+                    actionId: 'play_together',
+                    intent: 'taking_turns',
+                    input: 'tap',
+                    order: [],
+                    responseMs: 0,
+                    hintUsed: false,
+                    spoken: false,
+                    repeatCount: 1,
+                    completed: true,
+                  })
+                  .catch(() =>
+                    setStorageError('이번 놀이 기록을 저장하지 못했어요. 놀이는 계속할 수 있어요.'),
+                  );
+              }}
+              onStories={() => leave('episodes')}
+            />
+          </Suspense>
         )}
         {page === 'freehome' && homeStart && (
           <Suspense fallback={<div className="world-loading">우리 집…</div>}>
@@ -383,7 +421,7 @@ export default function App() {
           </button>
         </div>
       )}
-      {update && page !== 'game' && page !== 'freehome' && (
+      {update && page !== 'game' && page !== 'freehome' && page !== 'schoolplay' && (
         <div className="update-notice">
           새 이야기가 준비됐어요.
           <button

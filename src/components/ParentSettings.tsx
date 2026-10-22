@@ -149,13 +149,24 @@ export function ParentSettings({
                   <article key={r.id}>
                     <strong>
                       {episode?.title ??
-                        (r.episodeId === 'home-free' ? '우리 집 자유놀이' : r.episodeId)}
+                        {
+                          'home-free': '우리 집 자유놀이',
+                          'school-rps': '우리와 가위바위보',
+                          'school-blocks': '우리와 무지개 블록',
+                        }[r.episodeId] ??
+                        r.episodeId}
                     </strong>
                     <span>{new Date(r.date).toLocaleString('ko-KR')}</span>
-                    <p>{variation?.clue ?? r.variationId}</p>
+                    <p>
+                      {variation?.clue ??
+                        (r.episodeId.startsWith('school-')
+                          ? '친구와 번갈아 함께 놀기'
+                          : r.variationId)}
+                    </p>
                     <p>
                       {action?.lines[0] ??
                         {
+                          play_together: '친구와 놀이 한 판 완료',
                           carrot: '당근 인형 놀이',
                           food: '밥 주기',
                           water: '물 주기',

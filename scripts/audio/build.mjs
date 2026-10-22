@@ -13,7 +13,8 @@ export function validAudioHeader(buffer, extension) {
 export async function buildAudio(root = process.cwd(), strict = false) {
   const episodes = JSON.parse(await readFile(`${root}/src/data/episodes.json`, 'utf8'));
   const home = JSON.parse(await readFile(`${root}/src/data/home.json`, 'utf8'));
-  const entries = extractDialogue(episodes, home);
+  const school = JSON.parse(await readFile(`${root}/src/data/school.json`, 'utf8'));
+  const entries = extractDialogue(episodes, home, school);
   let available = 0;
   const invalid = [];
   const probe = spawnSync('ffprobe', ['-version'], { stdio: 'ignore' }).status === 0;
