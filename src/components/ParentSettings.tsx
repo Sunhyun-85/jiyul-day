@@ -1,3 +1,4 @@
+import { VoicePreview } from './VoicePreview';
 import { useEffect, useState } from 'react';
 import { episodes } from '../engine/ScenarioEngine';
 import { storage } from '../engine/ProgressStorage';
@@ -80,6 +81,7 @@ export function ParentSettings({
           </form>
         ) : (
           <>
+            <VoicePreview />
             <p className="small">아이의 속도에 맞춰 주세요. 설정은 바로 반영됩니다.</p>
             <div className="setting-row">
               <label htmlFor="choices">선택지 개수</label>

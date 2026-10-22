@@ -320,27 +320,11 @@
     "available": false
   },
   {
-    "dialogue_id": "hauri_a7201bfdcaf8ba32",
-    "character_id": "hauri",
-    "text": "괜찮아! 우리 다시 같이 쌓자.",
-    "audio_path": "/audio/hauri/hauri_a7201bfdcaf8ba32.mp3",
-    "emotion": "friendly",
-    "available": false
-  },
-  {
     "dialogue_id": "hauri_ad6776e231132487",
     "character_id": "hauri",
     "text": "우리 같이 만들래? 너는 어떤 생각이야?",
     "audio_path": "/audio/hauri/hauri_ad6776e231132487.mp3",
     "emotion": "thinking",
-    "available": false
-  },
-  {
-    "dialogue_id": "hauri_afd2c2809f11bade",
-    "character_id": "hauri",
-    "text": "빨강 블록을 올려 줄래?",
-    "audio_path": "/audio/hauri/hauri_afd2c2809f11bade.mp3",
-    "emotion": "friendly",
     "available": false
   },
   {
@@ -404,14 +388,6 @@
     "character_id": "hauri",
     "text": "보라 블록을 올려 줄래?",
     "audio_path": "/audio/hauri/hauri_df5a4cd95d491f97.mp3",
-    "emotion": "friendly",
-    "available": false
-  },
-  {
-    "dialogue_id": "hauri_e2618e11c45ff84e",
-    "character_id": "hauri",
-    "text": "지율아, 같이 놀자! 어떤 놀이 할까?",
-    "audio_path": "/audio/hauri/hauri_e2618e11c45ff84e.mp3",
     "emotion": "friendly",
     "available": false
   },

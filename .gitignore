@@ -6,3 +6,9 @@ playwright-report/
 
 # 배포 ZIP은 빌드 결과이므로 소스 이력에 넣지 않아요.
 jiyul-day-upload*.zip
+
+# Local audio generation credentials: never commit or bundle.
+.env.audio.local
+
+# Unreviewed generated voice samples.
+audio-previews/

@@ -53,3 +53,90 @@ test('파일 음성은 실제 Audio로 재생되고 누락 파일은 TTS 없이 
   expect(result).toEqual({ played: true, missing: false, absent: false, calls: 0 });
   await context.close();
 });
+
+test('생성한 제목과 우리 목소리를 실제 파일로 재생하고 부모 공간에서 네 개를 들어요', async ({
+  page,
+  context,
+}) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'jiyul-settings',
+      JSON.stringify({
+        voice: true,
+        speed: 'normal',
+        wait: 0,
+        choices: 4,
+        hints: true,
+        captions: true,
+        parentMode: true,
+      }),
+    );
+    const original = HTMLMediaElement.prototype.play;
+    (window as any).playedAudio = [];
+    HTMLMediaElement.prototype.play = function () {
+      (window as any).playedAudio.push(this);
+      return original.call(this);
+    };
+  });
+  await page.goto('/');
+  await page.getByRole('button', { name: '제목 음성 듣기' }).click();
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const audio = (window as any).playedAudio.at(-1) as HTMLAudioElement;
+        return audio?.currentTime > 0 && audio?.src.includes('narrator_b5df1916438eb387.wav');
+      }),
+    )
+    .toBe(true);
+  await page.getByRole('button', { name: '유치원', exact: true }).click();
+  await expect(page.locator('.school-game')).toHaveAttribute('data-phase', 'menu');
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const audio = (window as any).playedAudio.at(-1) as HTMLAudioElement;
+        return audio?.currentTime > 0 && audio?.src.includes('hauri_e2618e11c45ff84e.wav');
+      }),
+    )
+    .toBe(true);
+  await page.getByRole('button', { name: '부모님', exact: true }).click();
+  await page.getByLabel('확인 숫자').fill(await page.locator('.gate-code').innerText());
+  await page.getByRole('button', { name: '설정 열기' }).click();
+  await expect(page.locator('.voice-preview audio')).toHaveCount(4);
+  for (let i = 0; i < 4; i++) {
+    await page
+      .locator('.voice-preview audio')
+      .nth(i)
+      .evaluate(async (element) => {
+        await (element as HTMLAudioElement).play();
+      });
+    await expect
+      .poll(() =>
+        page
+          .locator('.voice-preview audio')
+          .nth(i)
+          .evaluate((element) => (element as HTMLAudioElement).currentTime),
+      )
+      .toBeGreaterThan(0);
+    expect(
+      await page
+        .locator('.voice-preview audio')
+        .evaluateAll((elements) => elements.filter((e) => !(e as HTMLAudioElement).paused).length),
+    ).toBe(1);
+  }
+  await page.getByRole('button', { name: '부모 설정 닫기' }).click();
+  expect(
+    await page.evaluate(() =>
+      (window as any).playedAudio.every((audio: HTMLAudioElement) => audio.paused),
+    ),
+  ).toBe(true);
+  await page.getByRole('button', { name: '처음으로', exact: true }).click();
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+  });
+  await context.setOffline(true);
+  await page.reload();
+  await page.getByRole('button', { name: '제목 음성 듣기' }).click();
+  await expect
+    .poll(() => page.evaluate(() => (window as any).playedAudio.at(-1)?.currentTime ?? 0))
+    .toBeGreaterThan(0);
+});

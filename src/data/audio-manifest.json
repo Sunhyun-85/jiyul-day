@@ -326,9 +326,9 @@
       "dialogue_id": "hauri_a7201bfdcaf8ba32",
       "character_id": "hauri",
       "text": "괜찮아! 우리 다시 같이 쌓자.",
-      "audio_path": "/audio/hauri/hauri_a7201bfdcaf8ba32.mp3",
+      "audio_path": "/audio/hauri/hauri_a7201bfdcaf8ba32.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_ad6776e231132487",
@@ -342,9 +342,9 @@
       "dialogue_id": "hauri_afd2c2809f11bade",
       "character_id": "hauri",
       "text": "빨강 블록을 올려 줄래?",
-      "audio_path": "/audio/hauri/hauri_afd2c2809f11bade.mp3",
+      "audio_path": "/audio/hauri/hauri_afd2c2809f11bade.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_b74e1b78ea9eb99c",
@@ -414,9 +414,9 @@
       "dialogue_id": "hauri_e2618e11c45ff84e",
       "character_id": "hauri",
       "text": "지율아, 같이 놀자! 어떤 놀이 할까?",
-      "audio_path": "/audio/hauri/hauri_e2618e11c45ff84e.mp3",
+      "audio_path": "/audio/hauri/hauri_e2618e11c45ff84e.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_e345590d42ec4fd4",
@@ -961,6 +961,14 @@
       "audio_path": "/audio/narrator/narrator_b4d8fcf3c974b539.mp3",
       "emotion": "thinking",
       "available": false
+    },
+    {
+      "dialogue_id": "narrator_b5df1916438eb387",
+      "character_id": "narrator",
+      "text": "지율이의 신나는 하루",
+      "audio_path": "/audio/narrator/narrator_b5df1916438eb387.wav",
+      "emotion": "bright",
+      "available": true
     },
     {
       "dialogue_id": "narrator_b702e8f823300495",

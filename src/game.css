@@ -1655,3 +1655,42 @@ button {
     top: 24%;
   }
 }
+
+.map-title-voice {
+  background: transparent;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-shadow: inherit;
+  line-height: inherit;
+  min-height: 44px;
+}
+.map-title-voice::after {
+  content: ' ♫';
+  font-size: 0.4em;
+  vertical-align: middle;
+  color: #6b8d6b;
+}
+.voice-preview {
+  margin: 16px 0 24px;
+  padding: 14px;
+  border: 1px solid #d8dfce;
+  border-radius: 16px;
+  background: #f6f8ef;
+}
+.voice-preview h3 {
+  margin: 0 0 8px;
+}
+.voice-preview > div {
+  margin-top: 15px;
+}
+.voice-preview > div p {
+  margin: 0 0 7px;
+  font-size: 14px;
+}
+.voice-preview audio {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}

@@ -57,11 +57,11 @@ export default function App() {
     return () => window.removeEventListener('game-update', listener);
   }, []);
   const say = useCallback(
-    (line: string) => {
+    (line: string, rate?: number) => {
       const token = ++speechToken.current;
       setVoiceFailed(false);
       if (settings.voice)
-        void speech.speak(line, settings.speed === 'slow' ? 0.8 : 1).then((ok) => {
+        void speech.speak(line, rate ?? (settings.speed === 'slow' ? 0.8 : 1)).then((ok) => {
           if (token === speechToken.current) setVoiceFailed(!ok);
         });
     },
@@ -322,7 +322,11 @@ export default function App() {
       </nav>
       <main className="game-main" inert={parent}>
         {(page === 'home' || page === 'places') && (
-          <WorldMap onPlace={choosePlace} paused={parent} />
+          <WorldMap
+            onPlace={choosePlace}
+            paused={parent}
+            onTitle={() => say('지율이의 신나는 하루', 1)}
+          />
         )}
         {page === 'episodes' && (
           <EpisodeRoom
