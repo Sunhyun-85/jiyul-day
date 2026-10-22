@@ -63,7 +63,7 @@ export default function App() {
       const token = ++speechToken.current;
       setVoiceFailed(false);
       if (settings.voice)
-        void speech.speak(line, rate ?? (settings.speed === 'slow' ? 0.8 : 1)).then((ok) => {
+        return speech.speak(line, rate ?? (settings.speed === 'slow' ? 0.8 : 1)).then((ok) => {
           if (token === speechToken.current) setVoiceFailed(!ok);
         });
     },
@@ -364,7 +364,6 @@ export default function App() {
                     setStorageError('이번 놀이 기록을 저장하지 못했어요. 놀이는 계속할 수 있어요.'),
                   );
               }}
-              onStories={() => leave('episodes')}
             />
           </Suspense>
         )}

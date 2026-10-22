@@ -20,16 +20,10 @@ export function useTitleGreeting(active: boolean) {
         .then(() => {
           if (live) consumed.current = true;
         })
-        .catch((error: unknown) => {
-          if (!live) return;
-          pending = false;
-          // Only autoplay denial can be retried on a real gesture; never loop on broken files.
-          if (!(error instanceof DOMException && error.name === 'NotAllowedError'))
-            consumed.current = true;
+        .catch(() => {
+          // Autoplay denial must not defer the greeting until a place is selected.
+          if (live) consumed.current = true;
         });
-    };
-    const gesture = (event: Event) => {
-      if (event.target instanceof Element && event.target.closest('.world-map')) attempt();
     };
     const visibility = () => {
       if (document.hidden) {
@@ -39,14 +33,10 @@ export function useTitleGreeting(active: boolean) {
     };
     // Delay until after StrictMode's setup/cleanup rehearsal, without requiring a click.
     const timer = setTimeout(attempt, 0);
-    document.addEventListener('pointerup', gesture);
-    document.addEventListener('keydown', gesture);
     document.addEventListener('visibilitychange', visibility);
     return () => {
       live = false;
       clearTimeout(timer);
-      document.removeEventListener('pointerup', gesture);
-      document.removeEventListener('keydown', gesture);
       document.removeEventListener('visibilitychange', visibility);
       audio.pause();
       if (attempted) consumed.current = true;

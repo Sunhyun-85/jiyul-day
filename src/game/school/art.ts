@@ -2,6 +2,13 @@ import type { Hand } from '../../engine/SchoolPlayEngine';
 const wrap = (body: string) =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">${body}</svg>`;
 export function handSvg(hand: Hand) {
+  if (hand === 'rock')
+    return wrap(`
+    <ellipse cx="80" cy="148" rx="50" ry="7" fill="#796844" opacity=".12"/>
+    <path d="M49 134L35 111Q28 99 29 80V58Q29 42 44 42Q51 42 55 48Q55 31 70 31Q80 31 84 41Q87 29 100 34Q110 37 111 48Q126 44 131 58L133 91Q133 115 113 133Z" fill="#f5c69e" stroke="#a77b59" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M55 49V74Q55 83 44 83M83 43V72Q83 84 70 84M111 50V74Q111 86 98 86M130 78Q126 89 115 87" fill="none" stroke="#c18c67" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M38 101Q31 91 40 83Q47 77 57 82L85 94Q94 98 89 108Q85 116 74 112L59 106" fill="#f5c69e" stroke="#a77b59" stroke-width="4" stroke-linecap="round"/>
+    <path d="M52 132H112V152H52Z" fill="#e7b252" stroke="#b99148" stroke-width="3"/>`);
   const shapes = {
     rock: 'M44 130V85q-19-25-4-34 12-5 23 14V49q0-20 17-15 8-17 21-7 17-8 23 9 17-1 18 16v48q-1 24-23 35H62Z',
     scissors:

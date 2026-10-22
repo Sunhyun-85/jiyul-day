@@ -163,7 +163,9 @@ export default function HomeGame({
             ? '밥그릇을 톡'
             : snapshot.selected === 'bottle'
               ? '물그릇을 톡'
-              : '놓을 곳을 톡'}
+              : snapshot?.owner === 'jiyul'
+                ? '던질 곳을 톡'
+                : '놓을 곳을 톡'}
         </div>
       )}
       <div className="home-accessible" aria-label="키보드 놀이 조작">

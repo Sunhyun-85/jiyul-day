@@ -11,13 +11,11 @@ export default function SchoolGame({
   onLine,
   onSound,
   onFinish,
-  onStories,
 }: {
   paused: boolean;
-  onLine: (text: string) => void;
+  onLine: (text: string) => void | Promise<void>;
   onSound: (name: 'tap' | 'drop' | 'happy') => void;
   onFinish: (event: SchoolEvent) => void;
-  onStories: () => void;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const scene = useRef<SchoolScene | undefined>(undefined);
@@ -148,11 +146,6 @@ export default function SchoolGame({
             ))}
           </div>
         )}
-        {phase === 'rps-reveal' && !snapshot?.winner && (
-          <button className="school-next" onClick={() => scene.current?.nextRound()}>
-            한 번 더!
-          </button>
-        )}
         {(phase === 'block-color' || phase === 'friend-color') && (
           <>
             <p className="school-prompt">
@@ -195,11 +188,6 @@ export default function SchoolGame({
           </>
         )}
       </div>
-      {phase === 'menu' && (
-        <button className="school-stories" onClick={onStories} aria-label="기존 이야기 고르기">
-          이야기 놀이
-        </button>
-      )}
       {phase && phase !== 'menu' && phase !== 'intro' && (
         <button
           className="school-stories"

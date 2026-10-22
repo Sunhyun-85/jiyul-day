@@ -20,6 +20,7 @@ export type HumanAnimation =
   | 'sad'
   | 'surprised'
   | 'thinking'
+  | 'throwing'
   | 'holding'
   | 'waving'
   | 'playing_blocks';
@@ -110,6 +111,7 @@ export class DogActor extends Phaser.GameObjects.Container {
 }
 export class HumanActor extends Phaser.GameObjects.Container {
   animation: HumanAnimation = 'idle';
+  private animationStarted = 0;
   private legs: Phaser.GameObjects.Image[];
   private arms: Phaser.GameObjects.Image[];
   private head: Phaser.GameObjects.Container;
@@ -134,9 +136,21 @@ export class HumanActor extends Phaser.GameObjects.Container {
     );
   }
   animate(a: HumanAnimation) {
+    if (a !== this.animation) this.animationStarted = this.scene.time.now;
     this.animation = a;
   }
   hand() {
+    if (this.animation === 'throwing') {
+      const arm = this.arms[1];
+      const blend = Phaser.Math.Clamp((this.scene.time.now - this.animationStarted) / 180, 0, 1);
+      return {
+        x:
+          this.x + Phaser.Math.Linear(43, arm.x - Math.sin(arm.rotation) * 48, blend) * this.scaleX,
+        y:
+          this.y +
+          Phaser.Math.Linear(-98, arm.y + Math.cos(arm.rotation) * 48, blend) * this.scaleY,
+      };
+    }
     return { x: this.x + 43 * this.scaleX, y: this.y - 98 * this.scaleY };
   }
   tick(time: number, reduced: boolean) {
@@ -144,16 +158,25 @@ export class HumanActor extends Phaser.GameObjects.Container {
       a = this.animation;
     this.legs.forEach((p, i) => (p.angle = a === 'walk' ? Math.sin(t + i * Math.PI) * 17 : 0));
     this.arms[0].angle = a === 'walk' ? -Math.sin(t) * 18 : a === 'thinking' ? -35 : 0;
+    const throwTime = this.scene.time.now - this.animationStarted;
+    const throwAngle =
+      throwTime < 220
+        ? Phaser.Math.Linear(-65, -155, throwTime / 220)
+        : Phaser.Math.Linear(-155, -25, Math.min(1, (throwTime - 220) / 220));
     this.arms[1].angle =
-      a === 'waving'
-        ? -145 + Math.sin(t * 1.7) * 15
-        : a === 'holding'
+      a === 'throwing'
+        ? reduced
           ? -65
-          : a === 'playing_blocks'
-            ? -45
-            : a === 'walk'
-              ? Math.sin(t) * 18
-              : 0;
+          : throwAngle
+        : a === 'waving'
+          ? -145 + Math.sin(t * 1.7) * 15
+          : a === 'holding'
+            ? -65
+            : a === 'playing_blocks'
+              ? -45
+              : a === 'walk'
+                ? Math.sin(t) * 18
+                : 0;
     this.head.y = -166 + (a === 'walk' ? Math.sin(t * 2) * 2 : a === 'happy' ? Math.sin(t) * 2 : 0);
     this.head.angle = a === 'sad' ? 7 : a === 'thinking' ? -6 : 0;
     this.head.scaleY = a === 'surprised' ? 1.06 : 1;

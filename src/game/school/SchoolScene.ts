@@ -68,7 +68,7 @@ export class SchoolScene extends Phaser.Scene {
   constructor(
     private hooks: {
       snapshot: (s: SchoolSnapshot) => void;
-      line: (text: string) => void;
+      line: (text: string) => void | Promise<void>;
       sound: (name: 'tap' | 'drop' | 'happy') => void;
       finish: (e: SchoolEvent) => void;
       ready: () => void;
@@ -173,8 +173,9 @@ export class SchoolScene extends Phaser.Scene {
   }
   private line(text: string) {
     this.state.line = text;
-    this.hooks.line(text);
+    const playback = this.hooks.line(text);
     this.emit();
+    return Promise.resolve(playback);
   }
   menu() {
     if (!this.ready) return;
@@ -240,20 +241,43 @@ export class SchoolScene extends Phaser.Scene {
     this.state.scores = { ...this.rps.scores };
     this.state.winner = this.rps.winner;
     this.hooks.sound(result.result === 'draw' ? 'tap' : 'happy');
-    this.line(
-      result.result === 'draw'
-        ? '똑같네! 한 번 더 하자.'
-        : result.result === 'jiyul'
-          ? '지율이가 이겼네! 멋지다!'
-          : '이번에는 내가 이겼네! 또 해 보자.',
+    let speechDone = false;
+    const playback = this.line(
+      this.rps.winner
+        ? this.rps.winner === 'jiyul'
+          ? '지율이가 3승! 같이 놀아서 즐거웠어!'
+          : '우리가 3승! 같이 놀아서 즐거웠어!'
+        : result.result === 'draw'
+          ? '똑같네! 한 번 더 하자.'
+          : result.result === 'jiyul'
+            ? '지율이가 이겼네! 멋지다!'
+            : '이번에는 내가 이겼네! 또 해 보자.',
+    );
+    void playback.then(
+      () => {
+        speechDone = true;
+      },
+      () => {
+        speechDone = true;
+      },
     );
     if (this.rps.winner) {
-      this.line(
-        this.rps.winner === 'jiyul'
-          ? '지율이가 3승! 같이 놀아서 즐거웠어!'
-          : '우리가 3승! 같이 놀아서 즐거웠어!',
-      );
       this.hooks.finish({ mode: 'rps', winner: this.rps.winner, count: this.rps.rounds.length });
+    } else {
+      const match = this.rps;
+      const round = match.rounds.length;
+      const advance = () => {
+        if (
+          this.rps !== match ||
+          match.rounds.length !== round ||
+          this.state.phase !== 'rps-reveal' ||
+          this.state.winner
+        )
+          return;
+        if (speechDone) this.nextRound();
+        else this.time.delayedCall(150, advance);
+      };
+      this.time.delayedCall(3800, advance);
     }
   }
   private askBlock() {
@@ -287,7 +311,8 @@ export class SchoolScene extends Phaser.Scene {
     }
     if (this.state.phase !== 'block-color') return;
     if (color !== this.blocks.requested) {
-      this.line(`나는 ${COLORS[this.blocks.requested].name}이 좋아. 이 색을 찾아 줄래?`);
+      const name = COLORS[this.blocks.requested].name;
+      this.line(`나는 ${name}${name === '보라' ? '가' : '이'} 좋아. 이 색을 찾아 줄래?`);
       return;
     }
     this.state.phase = 'block-place';

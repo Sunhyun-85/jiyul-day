@@ -40,6 +40,8 @@ test('장소로 걸어가고 우리가 다가와 놀이를 제안해요', async 
   ).toBeVisible();
   await expect(page.getByRole('button', { name: '가위바위보', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: '무지개 블록' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '기존 이야기 고르기' })).toHaveCount(0);
+  await expect(page.getByText('이야기 놀이', { exact: true })).toHaveCount(0);
   await page.screenshot({ path: 'test-results/school-invite.png' });
   expect(errors).toEqual([]);
 });
@@ -49,11 +51,12 @@ test('그림으로 가위바위보를 내고 비긴 뒤 3승, 기록과 다시 �
   await page.getByRole('button', { name: '바위', exact: true }).click();
   expect((await state(page)).scores).toEqual({ jiyul: 0, woori: 0 });
   await expect(page.getByText('똑같네! 한 번 더 하자.')).toBeVisible();
-  await page.getByRole('button', { name: '한 번 더!', exact: true }).click();
+  await expect(page.getByRole('button', { name: '한 번 더!', exact: true })).toHaveCount(0);
+  await expect(page.locator('.school-game')).toHaveAttribute('data-phase', 'rps-pick');
   for (let i = 1; i <= 3; i++) {
     await page.getByRole('button', { name: '보', exact: true }).click();
     expect((await state(page)).scores.jiyul).toBe(i);
-    if (i < 3) await page.getByRole('button', { name: '한 번 더!', exact: true }).click();
+    if (i < 3) await expect(page.locator('.school-game')).toHaveAttribute('data-phase', 'rps-pick');
   }
   await expect(page.getByText('지율이가 이겼어!', { exact: true })).toBeVisible();
   await page.screenshot({ path: 'test-results/school-rps.png' });
@@ -196,4 +199,20 @@ test('휴대폰 터치로 블록을 끌고 오프라인에서도 유치원을 �
   await page.reload();
   await page.getByRole('button', { name: '유치원', exact: true }).click();
   await expect(page.locator('.school-game')).toHaveAttribute('data-phase', 'menu');
+});
+
+test('다음 판 자동 진행은 부모 창에서 멈추고 놀이를 바꾸면 취소돼요', async ({ page }) => {
+  await enter(page);
+  await page.getByRole('button', { name: '가위바위보', exact: true }).click();
+  await page.getByRole('button', { name: '바위', exact: true }).click();
+  await page.getByRole('button', { name: '부모님', exact: true }).click();
+  await page.waitForTimeout(4100);
+  expect((await state(page)).phase).toBe('rps-reveal');
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.school-game')).toHaveAttribute('data-phase', 'rps-pick');
+  await page.getByRole('button', { name: '바위', exact: true }).click();
+  await page.getByRole('button', { name: '놀이 다시 고르기' }).click();
+  await page.getByRole('button', { name: '무지개 블록' }).click();
+  await page.waitForTimeout(4100);
+  await expect(page.locator('.school-game')).toHaveAttribute('data-phase', 'block-color');
 });

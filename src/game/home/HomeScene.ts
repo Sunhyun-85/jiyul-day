@@ -66,6 +66,7 @@ const floor = (x: number, y: number) => ({
   y: Phaser.Math.Clamp(y, 440, 915),
 });
 export class HomeScene extends Phaser.Scene {
+  private flight?: Phaser.Tweens.Tween;
   private positiveFeedback?: Phaser.GameObjects.Ellipse;
   private background!: Phaser.GameObjects.Image;
   private dog!: DogActor;
@@ -214,6 +215,7 @@ export class HomeScene extends Phaser.Scene {
         this.selected = null;
         if (name === 'carrot') {
           this.owner = 'floor';
+          item.setVisible(true);
           this.boy.animate('idle');
         }
         item.setDepth(1800);
@@ -234,7 +236,11 @@ export class HomeScene extends Phaser.Scene {
     this.input.dragDistanceThreshold = 9;
     const tap = (obj: Phaser.GameObjects.GameObject, fn: () => void) =>
       obj.on('pointerup', (p: Phaser.Input.Pointer) => {
-        if (!this.frozen && p.getDistance() < 12 && this.dragOwner === undefined) fn();
+        if (!this.frozen && p.getDistance() < 12 && this.dragOwner === undefined) {
+          if (this.owner === 'jiyul' && this.selected === 'carrot' && obj !== this.boy)
+            this.drop('carrot', p.worldX, p.worldY, 'tap');
+          else fn();
+        }
       });
     tap(this.dog, () => {
       if (this.selected === 'carrot') this.drop('carrot', this.dog.x - 30, this.dog.y + 35, 'tap');
@@ -332,9 +338,21 @@ export class HomeScene extends Phaser.Scene {
     this.callbacks.line(this.variation.line(`home:${key}`, homeData.dialogue[key]));
   }
   private boyBusy() {
-    return this.behavior === 'tidying' || this.behavior === 'returning' || !!this.careItem;
+    return (
+      ['tidying', 'returning', 'retrieving', 'throwing'].includes(this.behavior) || !!this.careItem
+    );
   }
   private cancel() {
+    if (this.behavior === 'retrieving' && this.owner === 'box') this.items.carrot.setVisible(false);
+    if (this.flight && this.owner === 'floor') {
+      const p = floor(this.items.carrot.x, this.items.carrot.y);
+      this.items.carrot
+        .setPosition(p.x, p.y)
+        .setAngle(0)
+        .setDepth(p.y + 1);
+    }
+    this.flight?.stop();
+    this.flight = undefined;
     this.life.interrupt();
     this.roaming = false;
     this.nextRoamAt = this.life.elapsed + 1800;
@@ -389,6 +407,10 @@ export class HomeScene extends Phaser.Scene {
   }
   private tapItem(item: Item) {
     if (item !== 'carrot') {
+      if (this.owner === 'jiyul' && this.selected === 'carrot') {
+        this.drop('carrot', this.items[item].x, this.items[item].y, 'tap');
+        return;
+      }
       this.act(item === 'food' ? 'food' : 'water', 'tap');
       return;
     }
@@ -416,6 +438,10 @@ export class HomeScene extends Phaser.Scene {
     this.ring.setVisible(false);
     const image = this.items[item];
     if (item === 'carrot') {
+      if (this.owner === 'jiyul' && input === 'tap') {
+        this.throwCarrot(x, y);
+        return;
+      }
       this.cancel();
       this.owner = 'floor';
       this.boy.animate('idle');
@@ -456,17 +482,87 @@ export class HomeScene extends Phaser.Scene {
     });
   }
   private openBox() {
+    if (this.frozen || this.behavior === 'retrieving') return;
+    if (this.owner === 'box') {
+      this.cancel();
+      const token = this.serial;
+      this.behavior = 'retrieving';
+      this.selected = null;
+      this.callbacks.sound('tap');
+      this.walkBoy(165, 570, token, () => {
+        this.setBoxOpen(true);
+        this.boy.animate('holding');
+        this.items.carrot
+          .setVisible(true)
+          .setPosition(this.box.x, this.box.y - 15)
+          .setDepth(1800);
+        const hand = this.boy.hand();
+        this.tweens.add({
+          targets: this.items.carrot,
+          x: hand.x,
+          y: hand.y,
+          duration: this.reduced ? 100 : 550,
+          ease: 'Sine.easeInOut',
+          onComplete: () => {
+            if (token !== this.serial) return;
+            this.owner = 'jiyul';
+            this.selected = 'carrot';
+            this.behavior = 'idle';
+            this.setBoxOpen(false);
+            this.line('take');
+            this.log('take_carrot', 'tap', this.needs.state, 'holding');
+          },
+        });
+      });
+      this.publish();
+      return;
+    }
     if (this.behavior === 'tidying') this.cancel();
     this.setBoxOpen(!this.boxOpen);
-    if (this.owner === 'box') {
-      this.owner = 'floor';
-      this.items.carrot.setVisible(true).setPosition(230, 560).setDepth(561);
-      this.selected = 'carrot';
-      this.setBoxOpen(true);
-    }
     this.line('box');
     this.callbacks.sound('tap');
     this.log('box', 'tap', this.needs.state, this.boxOpen ? 'opened' : 'closed');
+  }
+  private throwCarrot(x: number, y: number) {
+    this.cancel();
+    const token = this.serial;
+    const target = floor(x, y);
+    this.behavior = 'throwing';
+    this.selected = null;
+    this.boy.animate('throwing');
+    this.publish();
+    // Wind up with the toy still in the hand, then release it into a visible arc.
+    this.later(this.reduced ? 80 : 300, token, () => {
+      const start = this.boy.hand();
+      this.owner = 'floor';
+      this.items.carrot.setVisible(true).setDepth(1800);
+      this.flight = this.tweens.addCounter({
+        from: 0,
+        to: 1,
+        duration: this.reduced ? 180 : 900,
+        onUpdate: (tween) => {
+          const t = tween.getValue() ?? 0;
+          this.items.carrot
+            .setPosition(
+              Phaser.Math.Linear(start.x, target.x, t),
+              Phaser.Math.Linear(start.y, target.y, t) -
+                Math.sin(Math.PI * t) * (this.reduced ? 15 : 155),
+            )
+            .setAngle(-18 + t * 300);
+        },
+        onComplete: () => {
+          if (token !== this.serial) return;
+          this.flight = undefined;
+          this.items.carrot
+            .setPosition(target.x, target.y)
+            .setAngle(0)
+            .setDepth(target.y + 1);
+          this.boy.animate('idle');
+          this.callbacks.sound('drop');
+          this.act('carrot', 'tap');
+        },
+      });
+    });
   }
   private tidyCarrot(token: number, done: () => void) {
     this.behavior = 'tidying';
@@ -1034,7 +1130,8 @@ export class HomeScene extends Phaser.Scene {
     if (id === 'call_mom') this.callMom();
     else if (id in this.items) this.tapItem(id as Item);
     else if (id === 'jini') {
-      if (this.owner === 'jini') this.takeCarrot();
+      if (this.selected === 'carrot') this.drop('carrot', this.dog.x - 30, this.dog.y + 35, 'tap');
+      else if (this.owner === 'jini') this.takeCarrot();
       else this.act('pet', 'tap');
     } else if (id === 'bed') this.act('bed', 'tap');
     else if (id === 'box') this.openBox();
@@ -1085,7 +1182,7 @@ export class HomeScene extends Phaser.Scene {
         .setPosition(p.x, p.y)
         .setDepth((this.owner === 'jini' ? this.dog.y : this.boy.y) + 2)
         .setAngle(this.owner === 'jini' ? 75 : -18);
-    } else this.items.carrot.setAngle(0);
+    } else if (this.behavior !== 'throwing') this.items.carrot.setAngle(0);
     this.cue
       .setPosition(
         Phaser.Math.Clamp(this.dog.x - 40, 90, 630),

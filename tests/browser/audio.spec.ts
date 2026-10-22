@@ -79,15 +79,6 @@ test('생성한 제목과 우리 목소리를 실제 파일로 재생하고 부�
     };
   });
   await page.goto('/');
-  await page.locator('.map-greeting').click();
-  await expect
-    .poll(() =>
-      page.evaluate(() => {
-        const audio = (window as any).playedAudio.at(-1) as HTMLAudioElement;
-        return audio?.currentTime > 0 && audio?.src.includes('narrator_b5df1916438eb387.wav');
-      }),
-    )
-    .toBe(true);
   await page.getByRole('button', { name: '유치원', exact: true }).click();
   await expect(page.locator('.school-game')).toHaveAttribute('data-phase', 'menu');
   await expect
@@ -135,8 +126,65 @@ test('생성한 제목과 우리 목소리를 실제 파일로 재생하고 부�
   });
   await context.setOffline(true);
   await page.reload();
-  await page.locator('.map-greeting').click();
+  await page.getByRole('button', { name: '유치원', exact: true }).click();
+  await expect(page.locator('.school-game')).toHaveAttribute('data-phase', 'menu');
   await expect
     .poll(() => page.evaluate(() => (window as any).playedAudio.at(-1)?.currentTime ?? 0))
     .toBeGreaterThan(0);
+});
+
+test('등록된 실제 음성 파일 전체가 디코딩되고 무음 파일이 아니에요', async ({ page }) => {
+  await page.goto('/');
+  const checked = await page.evaluate(async () => {
+    const manifest = await (await fetch('/audio/manifest.json')).json();
+    const decoder = new OfflineAudioContext(1, 1, 24000);
+    const results = [];
+    for (const entry of manifest.entries.filter((e: { available: boolean }) => e.available)) {
+      const response = await fetch(entry.audio_path);
+      if (!response.ok) throw new Error(`음성 파일 누락: ${entry.dialogue_id}`);
+      const buffer = await decoder.decodeAudioData(await response.arrayBuffer());
+      const samples = buffer.getChannelData(0);
+      let peak = 0;
+      for (const sample of samples) peak = Math.max(peak, Math.abs(sample));
+      results.push({ id: entry.dialogue_id, duration: buffer.duration, peak });
+    }
+    return results;
+  });
+  expect(checked.length).toBeGreaterThanOrEqual(4);
+  for (const audio of checked) {
+    expect(audio.duration, audio.id).toBeGreaterThan(0.3);
+    expect(audio.duration, audio.id).toBeLessThan(30);
+    expect(audio.peak, audio.id).toBeGreaterThan(0.01);
+  }
+});
+
+test('가위바위보 결과 음성이 길어도 자르지 않고 다음 판으로 넘어가요', async ({ page }) => {
+  await page.addInitScript(() => {
+    Math.random = () => 0.5;
+    localStorage.setItem('jiyul-settings', JSON.stringify({ voice: true, speed: 'normal' }));
+    const original = HTMLMediaElement.prototype.play;
+    HTMLMediaElement.prototype.play = function () {
+      // Exercise a long real recording without depending on the device's decode speed.
+      if (this.src.includes('hauri_4583ded083629b79')) {
+        this.playbackRate = 0.5;
+        (window as any).roundAudio = this;
+      }
+      return original.call(this);
+    };
+  });
+  await page.goto('/');
+  await page.getByRole('button', { name: '유치원', exact: true }).click();
+  await expect(page.locator('.school-game')).toHaveAttribute('data-phase', 'menu');
+  await page.getByRole('button', { name: '가위바위보', exact: true }).click();
+  await page.getByRole('button', { name: '가위', exact: true }).click();
+  await expect
+    .poll(() => page.evaluate(() => (window as any).roundAudio?.currentTime ?? 0))
+    .toBeGreaterThan(0);
+  await page.waitForTimeout(3900);
+  expect(await page.evaluate(() => !(window as any).roundAudio.paused)).toBe(true);
+  await expect(page.locator('.school-game')).toHaveAttribute('data-phase', 'rps-reveal');
+  await expect(page.locator('.school-game')).toHaveAttribute('data-phase', 'rps-pick', {
+    timeout: 8000,
+  });
+  expect(await page.evaluate(() => (window as any).roundAudio.ended)).toBe(true);
 });

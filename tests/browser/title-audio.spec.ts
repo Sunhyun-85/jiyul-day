@@ -46,16 +46,14 @@ test.describe('제목 자동 재생과 반복 방지', () => {
     await page.locator('.map-title').click();
     expect(await page.evaluate(() => (window as any).titleCalls)).toBe(1);
   });
-  test('자동 재생 거절 후 첫 터치로만 시작하고 이후에는 반복하지 않아요', async ({ page }) => {
+  test('자동 재생이 막혀도 장소 선택이나 제목 터치 때 뒤늦게 재생하지 않아요', async ({ page }) => {
     await observeTitle(page, true);
     await expect.poll(() => page.evaluate(() => (window as any).titleCalls)).toBe(1);
-    await page.locator('.map-greeting').click();
-    await expect
-      .poll(() => page.evaluate(() => (window as any).titleMedia.at(-1)?.currentTime ?? 0))
-      .toBeGreaterThan(0);
     await page.locator('.map-title').click();
-    await page.locator('.map-greeting').click();
-    expect(await page.evaluate(() => (window as any).titleCalls)).toBe(2);
+    await page.getByRole('button', { name: '유치원', exact: true }).click();
+    await expect(page.locator('.school-game')).toHaveAttribute('data-phase', 'menu');
+    expect(await page.evaluate(() => (window as any).titleCalls)).toBe(1);
+    expect(await page.evaluate(() => (window as any).titleMedia[0].currentTime)).toBe(0);
   });
   test('음소거 설정이면 자동 재생도 터치 재생도 하지 않아요', async ({ page }) => {
     await observeTitle(page, false, true);

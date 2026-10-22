@@ -212,11 +212,11 @@ for (const scenario of [
   });
 }
 
-test('4개 이야기가 음성 없이 끝나고 부모 기록·설정은 남아요', async ({ page }) => {
+test('집의 기존 이야기가 끝나고 부모 기록·설정은 남아요', async ({ page }) => {
   // Four map walks and two friend greetings deliberately take real animation time.
   test.setTimeout(60000);
   await setup(page);
-  for (const episode of data) {
+  for (const episode of data.filter((e) => e.place === 'home')) {
     await start(page, episode.id);
     await expect(page.locator('.toy-item')).toHaveCount(4);
     await page.getByRole('button', { name: '말했어요', exact: true }).click();
@@ -232,7 +232,7 @@ test('4개 이야기가 음성 없이 끝나고 부모 기록·설정은 남아�
     await page.getByRole('button', { name: '처음으로', exact: true }).click();
   }
   await parent(page);
-  await expect(page.locator('.record-list article')).toHaveCount(4);
+  await expect(page.locator('.record-list article')).toHaveCount(2);
   await expect(page.locator('.record-list')).toContainText('부모가 관찰함');
   await page.getByLabel('선택지 개수').selectOption('2');
   await page.getByLabel('선택지 기다리기').selectOption('8');
@@ -242,7 +242,7 @@ test('4개 이야기가 음성 없이 끝나고 부모 기록·설정은 남아�
   await expect(page.getByLabel('선택지 개수')).toHaveValue('2');
   await expect(page.getByLabel('선택지 기다리기')).toHaveValue('8');
   await expect(page.getByLabel('전체 대사 자막')).toBeChecked();
-  await expect(page.locator('.record-list article')).toHaveCount(4);
+  await expect(page.locator('.record-list article')).toHaveCount(2);
 });
 
 test('관찰을 건너뛰고 선택지 개수를 바꿀 수 있으며 부모 화면에서는 반응이 멈춰요', async ({
@@ -262,21 +262,6 @@ test('관찰을 건너뛰고 선택지 개수를 바꿀 수 있으며 부모 화
   await page.waitForTimeout(4000);
   await page.getByRole('button', { name: '부모 설정 닫기' }).click();
   await expect(page.locator('.play-world')).toHaveAttribute('data-phase', 'response');
-  await page.getByRole('button', { name: '이야기 이어가기' }).click();
-  await expect(page.getByRole('button', { name: '다시 놀기', exact: true })).toBeVisible();
-});
-
-test('거절을 듣고 쉬고 싶은 친구의 뜻을 존중할 수 있어요', async ({ page }) => {
-  await setup(page, 0, 0.95);
-  await start(page, 'hauri-feelings');
-  await expect(page.locator('.play-world')).toHaveAttribute('data-variation', 'rest');
-  await expect(page.locator('.toy-item')).toHaveCount(4);
-  await useToy(page, 'hauri-feelings', 'help');
-  await expect(page.locator('.short-speech')).toContainText('혼자 쉬고');
-  await page.getByRole('button', { name: '이야기 이어가기' }).click();
-  await expect(page.locator('.toy-item')).toHaveCount(4);
-  await useToy(page, 'hauri-feelings', 'respect');
-  await expect(page.locator('.rest-cloud')).toBeVisible();
   await page.getByRole('button', { name: '이야기 이어가기' }).click();
   await expect(page.getByRole('button', { name: '다시 놀기', exact: true })).toBeVisible();
 });
@@ -326,28 +311,4 @@ test('놀이를 마친 뒤 새 버전을 적용해도 설정을 유지해요', a
   } finally {
     await writeFile(path, original);
   }
-});
-
-test('우리는 놀이 화면에서 지율이보다 조금 작아요', async ({ page }) => {
-  await setup(page);
-  await page.getByRole('button', { name: '유치원', exact: true }).click();
-  await page.getByRole('button', { name: '기존 이야기 고르기' }).click();
-  await page.screenshot({ path: 'test-results/woori-lobby.png' });
-  await page.getByRole('button', { name: '우리와 블록 놀이', exact: true }).click();
-  await ready(page);
-  for (const size of [
-    { width: 360, height: 800 },
-    { width: 800, height: 1100 },
-  ]) {
-    await page.setViewportSize(size);
-    await expect
-      .poll(async () => {
-        const heights = JSON.parse(
-          (await page.locator('canvas').getAttribute('data-actor-heights'))!,
-        );
-        return Number((heights[1] / heights[0]).toFixed(2));
-      })
-      .toBe(0.92);
-  }
-  await page.screenshot({ path: 'test-results/woori-size.png' });
 });

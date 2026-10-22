@@ -38,17 +38,17 @@
       "dialogue_id": "hauri_1164d46d4458df88",
       "character_id": "hauri",
       "text": "고마워! 탑 위에 살살 올려 줘.",
-      "audio_path": "/audio/hauri/hauri_1164d46d4458df88.mp3",
+      "audio_path": "/audio/hauri/hauri_1164d46d4458df88.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_1241ca92b926ab75",
       "character_id": "hauri",
       "text": "보라! 좋아, 내가 올려 볼게.",
-      "audio_path": "/audio/hauri/hauri_1241ca92b926ab75.mp3",
+      "audio_path": "/audio/hauri/hauri_1241ca92b926ab75.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_14537b8a6a055412",
@@ -62,25 +62,25 @@
       "dialogue_id": "hauri_1837d02d510bced1",
       "character_id": "hauri",
       "text": "나는 남색이 좋아. 이 색을 찾아 줄래?",
-      "audio_path": "/audio/hauri/hauri_1837d02d510bced1.mp3",
+      "audio_path": "/audio/hauri/hauri_1837d02d510bced1.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_1e0bc00e206b5ef9",
       "character_id": "hauri",
       "text": "파랑 블록을 올려 줄래?",
-      "audio_path": "/audio/hauri/hauri_1e0bc00e206b5ef9.mp3",
+      "audio_path": "/audio/hauri/hauri_1e0bc00e206b5ef9.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_1e94fe1b78dabef9",
       "character_id": "hauri",
       "text": "주황 블록을 올려 줄래?",
-      "audio_path": "/audio/hauri/hauri_1e94fe1b78dabef9.mp3",
+      "audio_path": "/audio/hauri/hauri_1e94fe1b78dabef9.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_2b4183dfbb90df7c",
@@ -118,9 +118,9 @@
       "dialogue_id": "hauri_3a6db83a9de12022",
       "character_id": "hauri",
       "text": "앗, 지율이가 놓다가 넘어졌네. 이번엔 우리가 이겼어.",
-      "audio_path": "/audio/hauri/hauri_3a6db83a9de12022.mp3",
+      "audio_path": "/audio/hauri/hauri_3a6db83a9de12022.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_3acd335c7b186e0b",
@@ -134,33 +134,33 @@
       "dialogue_id": "hauri_3c69401f5a668a69",
       "character_id": "hauri",
       "text": "빨강! 좋아, 내가 올려 볼게.",
-      "audio_path": "/audio/hauri/hauri_3c69401f5a668a69.mp3",
+      "audio_path": "/audio/hauri/hauri_3c69401f5a668a69.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_3d08bdfde36b668b",
       "character_id": "hauri",
       "text": "우리가 3승! 같이 놀아서 즐거웠어!",
-      "audio_path": "/audio/hauri/hauri_3d08bdfde36b668b.mp3",
+      "audio_path": "/audio/hauri/hauri_3d08bdfde36b668b.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_40aeeb5a80abb069",
       "character_id": "hauri",
       "text": "똑같네! 한 번 더 하자.",
-      "audio_path": "/audio/hauri/hauri_40aeeb5a80abb069.mp3",
+      "audio_path": "/audio/hauri/hauri_40aeeb5a80abb069.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_4583ded083629b79",
       "character_id": "hauri",
       "text": "이번에는 내가 이겼네! 또 해 보자.",
-      "audio_path": "/audio/hauri/hauri_4583ded083629b79.mp3",
+      "audio_path": "/audio/hauri/hauri_4583ded083629b79.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_478e5e10dc163830",
@@ -198,9 +198,9 @@
       "dialogue_id": "hauri_62e0d977b2729786",
       "character_id": "hauri",
       "text": "나는 노랑이 좋아. 이 색을 찾아 줄래?",
-      "audio_path": "/audio/hauri/hauri_62e0d977b2729786.mp3",
+      "audio_path": "/audio/hauri/hauri_62e0d977b2729786.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_692ba62a696e42a3",
@@ -208,14 +208,6 @@
       "text": "나는 자동차를 만들고 싶어. 네 생각도 들려줄래?",
       "audio_path": "/audio/hauri/hauri_692ba62a696e42a3.mp3",
       "emotion": "thinking",
-      "available": false
-    },
-    {
-      "dialogue_id": "hauri_69c3d7fafbccd243",
-      "character_id": "hauri",
-      "text": "나는 보라이 좋아. 이 색을 찾아 줄래?",
-      "audio_path": "/audio/hauri/hauri_69c3d7fafbccd243.mp3",
-      "emotion": "friendly",
       "available": false
     },
     {
@@ -240,6 +232,14 @@
       "text": "우리 같이 만들래?",
       "audio_path": "/audio/hauri/hauri_79ea353579144263.mp3",
       "emotion": "happy",
+      "available": false
+    },
+    {
+      "dialogue_id": "hauri_81d845488bbf51ba",
+      "character_id": "hauri",
+      "text": "나는 보라가 좋아. 이 색을 찾아 줄래?",
+      "audio_path": "/audio/hauri/hauri_81d845488bbf51ba.mp3",
+      "emotion": "friendly",
       "available": false
     },
     {

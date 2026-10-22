@@ -60,9 +60,23 @@ test('지니가 가져온 당근을 지율이가 받아 정리하고 상자에�
   await page.screenshot({ path: 'test-results/home-carrot.png' });
   await expect.poll(async () => (await state(page)).positiveFeedback).toBe(false);
   await item(page, 'box');
-  await expect.poll(async () => (await state(page)).owner).toBe('floor');
+  await expect.poll(async () => (await state(page)).behavior).toBe('retrieving');
+  await expect.poll(async () => (await state(page)).owner).toBe('jiyul');
+  expect((await state(page)).objects.jiyul.y).toBeCloseTo(570, 0);
   expect((await state(page)).selected).toBe('carrot');
   await tap(page, 330, 880);
+  await expect.poll(async () => (await state(page)).behavior, { intervals: [50] }).toBe('throwing');
+  await expect.poll(async () => (await state(page)).owner, { intervals: [50] }).toBe('floor');
+  const flying = await state(page);
+  expect(flying.behavior).toBe('throwing');
+  expect(flying.objects.carrot.y).toBeLessThan(880);
+  await page.getByRole('button', { name: '부모님', exact: true }).click();
+  const paused = (await state(page)).objects.carrot;
+  await page.waitForTimeout(1100);
+  expect((await state(page)).behavior).toBe('throwing');
+  expect((await state(page)).objects.carrot).toEqual(paused);
+  await page.keyboard.press('Escape');
+  await page.screenshot({ path: 'test-results/home-carrot-flight.png' });
   await expect.poll(async () => (await state(page)).owner, { timeout: 10000 }).toBe('jini');
   await page.setViewportSize({ width: 800, height: 1100 });
   await page.waitForTimeout(350);
@@ -241,7 +255,7 @@ test('정리 도중 당근을 다시 끌어도 인형이 사라지지 않고 새
   expect((await state(page)).state.energy).toBe(66);
   await item(page, 'box');
   await expect.poll(async () => (await state(page)).selected).toBe('carrot');
-  expect((await state(page)).owner).toBe('floor');
+  expect((await state(page)).owner).toBe('jiyul');
 });
 
 for (const [id, random, fill, animation, need, expected] of [
@@ -296,8 +310,11 @@ test('짧게 두 번 놀고 나면 당근 대신 물과 밥을 원하고 돌봄 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await open(page);
   for (let round = 0; round < 2; round++) {
-    if (round) await item(page, 'box');
-    await drag(page, 'carrot', 350, 870);
+    if (round) {
+      await item(page, 'box');
+      await expect.poll(async () => (await state(page)).owner).toBe('jiyul');
+      await tap(page, 350, 870);
+    } else await drag(page, 'carrot', 350, 870);
     await expect.poll(async () => (await state(page)).owner, { timeout: 10000 }).toBe('box');
     await expect.poll(async () => (await state(page)).behavior).toBe('idle');
     expect((await state(page)).objects.jiyul).toEqual({ x: 165, y: 680 });
