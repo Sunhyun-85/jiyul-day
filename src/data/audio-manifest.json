@@ -278,25 +278,25 @@
       "dialogue_id": "hauri_97e522d14ac30b81",
       "character_id": "hauri",
       "text": "초록 블록을 올려 줄래?",
-      "audio_path": "/audio/hauri/hauri_97e522d14ac30b81.mp3",
+      "audio_path": "/audio/hauri/hauri_97e522d14ac30b81.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_9c03ad8e7666ce2c",
       "character_id": "hauri",
       "text": "나는 파랑이 좋아. 이 색을 찾아 줄래?",
-      "audio_path": "/audio/hauri/hauri_9c03ad8e7666ce2c.mp3",
+      "audio_path": "/audio/hauri/hauri_9c03ad8e7666ce2c.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_9cb674ee854f9f8e",
       "character_id": "hauri",
       "text": "남색! 좋아, 내가 올려 볼게.",
-      "audio_path": "/audio/hauri/hauri_9cb674ee854f9f8e.mp3",
+      "audio_path": "/audio/hauri/hauri_9cb674ee854f9f8e.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_a030ed3882addcd8",
@@ -310,9 +310,9 @@
       "dialogue_id": "hauri_a0d2b564f8bfcbf7",
       "character_id": "hauri",
       "text": "이번엔 내 차례! 무슨 색을 올릴까?",
-      "audio_path": "/audio/hauri/hauri_a0d2b564f8bfcbf7.mp3",
+      "audio_path": "/audio/hauri/hauri_a0d2b564f8bfcbf7.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_a5a29eaacc9bb01a",
@@ -358,25 +358,25 @@
       "dialogue_id": "hauri_c845faa0da7b2299",
       "character_id": "hauri",
       "text": "나는 빨강이 좋아. 이 색을 찾아 줄래?",
-      "audio_path": "/audio/hauri/hauri_c845faa0da7b2299.mp3",
+      "audio_path": "/audio/hauri/hauri_c845faa0da7b2299.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_cb738ed75d871073",
       "character_id": "hauri",
       "text": "남색 블록을 올려 줄래?",
-      "audio_path": "/audio/hauri/hauri_cb738ed75d871073.mp3",
+      "audio_path": "/audio/hauri/hauri_cb738ed75d871073.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_ce6da483afe5638d",
       "character_id": "hauri",
       "text": "주황! 좋아, 내가 올려 볼게.",
-      "audio_path": "/audio/hauri/hauri_ce6da483afe5638d.mp3",
+      "audio_path": "/audio/hauri/hauri_ce6da483afe5638d.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_d057f04d130241c0",
