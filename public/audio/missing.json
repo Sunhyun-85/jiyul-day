@@ -128,30 +128,6 @@
     "available": false
   },
   {
-    "dialogue_id": "hauri_81d845488bbf51ba",
-    "character_id": "hauri",
-    "text": "나는 보라가 좋아. 이 색을 찾아 줄래?",
-    "audio_path": "/audio/hauri/hauri_81d845488bbf51ba.mp3",
-    "emotion": "friendly",
-    "available": false
-  },
-  {
-    "dialogue_id": "hauri_8afdeba7db5a6270",
-    "character_id": "hauri",
-    "text": "나는 주황이 좋아. 이 색을 찾아 줄래?",
-    "audio_path": "/audio/hauri/hauri_8afdeba7db5a6270.mp3",
-    "emotion": "friendly",
-    "available": false
-  },
-  {
-    "dialogue_id": "hauri_8eee943670860635",
-    "character_id": "hauri",
-    "text": "파랑! 좋아, 내가 올려 볼게.",
-    "audio_path": "/audio/hauri/hauri_8eee943670860635.mp3",
-    "emotion": "friendly",
-    "available": false
-  },
-  {
     "dialogue_id": "hauri_90878c074f15f810",
     "character_id": "hauri",
     "text": "좋아하는 장난감을 못 찾겠어.",

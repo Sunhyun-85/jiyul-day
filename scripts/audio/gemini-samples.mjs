@@ -7,6 +7,10 @@ import { dialogueId } from './catalog.mjs';
 import { validAudioHeader } from './build.mjs';
 const model = 'gemini-3.8-flash-tts';
 const maxOutputTokens = 750;
+const limitArg = process.argv.find((arg) => arg.startsWith('--limit='));
+const limit = limitArg ? Number(limitArg.slice(8)) : Infinity;
+if (limitArg && (!Number.isInteger(limit) || limit < 1 || limit > 200))
+  throw new Error('--limit은 1~200 정수여야 합니다.');
 const allMissing = process.argv.includes('--missing');
 if (allMissing && process.argv.includes('--title'))
   throw new Error('--missing과 --title은 함께 사용할 수 없습니다.');
@@ -53,9 +57,14 @@ if (allMissing) {
       path: `public/audio/${e.character_id}/${e.dialogue_id}.wav`,
     }));
 }
+jobs = jobs.slice(0, limit);
 const args = process.argv.slice(2);
-if (args.some((arg) => arg !== '--generate' && arg !== '--title' && arg !== '--missing'))
-  throw new Error('지원 옵션: --generate, --title, --missing');
+if (
+  args.some(
+    (arg) => arg !== '--generate' && arg !== '--title' && arg !== '--missing' && arg !== limitArg,
+  )
+)
+  throw new Error('지원 옵션: --generate, --title, --missing, --limit=N');
 console.log(
   JSON.stringify(
     { model, voice, maxOutputTokens, requests: jobs.length, automaticRetries: false, jobs },
@@ -118,8 +127,22 @@ for (const job of jobs) {
   } catch {
     throw new Error('음성 요청 연결 실패. 중복 과금을 피하려고 자동 재시도하지 않습니다.');
   }
-  if (!response.ok)
+  if (!response.ok) {
+    // Print only quota identifiers, never raw response text, request headers or credentials.
+    const error = await response.json().catch(() => ({}));
+    const details = error.error?.details ?? [];
+    const safeId = (value) =>
+      typeof value === 'string' && /^[a-zA-Z0-9_./:-]{1,200}$/.test(value) ? value : undefined;
+    const quotas = details
+      .flatMap((d) => d.violations ?? [])
+      .map((v) => ({
+        metric: safeId(v.quotaMetric),
+        id: safeId(v.quotaId),
+      }));
+    const retryDelay = details.map((d) => safeId(d.retryDelay)).find(Boolean);
+    console.log(JSON.stringify({ httpStatus: response.status, quotas, retryDelay }));
     throw new Error(`음성 요청 실패(HTTP ${response.status}). 자동 재시도하지 않습니다.`);
+  }
   const body = await response.json();
   if (body.status !== 'completed')
     throw new Error('음성이 정상 완료되지 않아 중단합니다. 자동 재시도하지 않습니다.');
