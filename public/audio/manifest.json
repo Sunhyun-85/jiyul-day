@@ -214,17 +214,17 @@
       "dialogue_id": "hauri_71923a5df1917f28",
       "character_id": "hauri",
       "text": "노랑 블록을 올려 줄래?",
-      "audio_path": "/audio/hauri/hauri_71923a5df1917f28.mp3",
+      "audio_path": "/audio/hauri/hauri_71923a5df1917f28.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_79ace3bfb0fb5e68",
       "character_id": "hauri",
       "text": "나는 초록이 좋아. 이 색을 찾아 줄래?",
-      "audio_path": "/audio/hauri/hauri_79ace3bfb0fb5e68.mp3",
+      "audio_path": "/audio/hauri/hauri_79ace3bfb0fb5e68.wav",
       "emotion": "friendly",
-      "available": false
+      "available": true
     },
     {
       "dialogue_id": "hauri_79ea353579144263",
